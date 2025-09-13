@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Domain", "Airline.Domain\AirlineApp.Domain.csproj", "{50AC3CD9-2FE4-4A94-AD39-E688BB17D78F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Seed", "AirlineApp.Seed\AirlineApp.Seed.csproj", "{ADF5A262-63C6-46F1-960B-BC6BC30F14F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{50AC3CD9-2FE4-4A94-AD39-E688BB17D78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50AC3CD9-2FE4-4A94-AD39-E688BB17D78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50AC3CD9-2FE4-4A94-AD39-E688BB17D78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF5A262-63C6-46F1-960B-BC6BC30F14F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF5A262-63C6-46F1-960B-BC6BC30F14F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF5A262-63C6-46F1-960B-BC6BC30F14F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF5A262-63C6-46F1-960B-BC6BC30F14F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
