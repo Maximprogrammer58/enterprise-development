@@ -77,33 +77,33 @@ public class DataSeed
     public List<Ticket> GetTickets(List<Flight> flights, List<Passenger> passengers) => new()
     {
         new Ticket { Id = 1, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[0], PassengerId = passengers[0].Id, SeatNumber = "1A", HasHandLuggage = true, BaggageWeight = 20 },
-        new Ticket { Id = 2, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[1], PassengerId = passengers[1].Id, SeatNumber = "1B", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 2, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[1], PassengerId = passengers[1].Id, SeatNumber = "1B", HasHandLuggage = false },
         new Ticket { Id = 3, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[2], PassengerId = passengers[2].Id, SeatNumber = "1C", HasHandLuggage = true, BaggageWeight = 5 },
         new Ticket { Id = 4, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[3], PassengerId = passengers[3].Id, SeatNumber = "2A", HasHandLuggage = true, BaggageWeight = 15 },
         new Ticket { Id = 5, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[4], PassengerId = passengers[4].Id, SeatNumber = "2B", HasHandLuggage = true, BaggageWeight = 10 },
-        new Ticket { Id = 6, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[5], PassengerId = passengers[5].Id, SeatNumber = "2C", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 6, Flight = flights[0], FlightId = flights[0].Id, Passenger = passengers[5], PassengerId = passengers[5].Id, SeatNumber = "2C", HasHandLuggage = false },
 
         new Ticket { Id = 7, Flight = flights[1], FlightId = flights[1].Id, Passenger = passengers[0], PassengerId = passengers[0].Id, SeatNumber = "3A", HasHandLuggage = true, BaggageWeight = 12 },
         new Ticket { Id = 8, Flight = flights[1], FlightId = flights[1].Id, Passenger = passengers[1], PassengerId = passengers[1].Id, SeatNumber = "3B", HasHandLuggage = true, BaggageWeight = 8 },
-        new Ticket { Id = 9, Flight = flights[1], FlightId = flights[1].Id, Passenger = passengers[2], PassengerId = passengers[2].Id, SeatNumber = "3C", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 9, Flight = flights[1], FlightId = flights[1].Id, Passenger = passengers[2], PassengerId = passengers[2].Id, SeatNumber = "3C", HasHandLuggage = false },
         new Ticket { Id = 10, Flight = flights[1], FlightId = flights[1].Id, Passenger = passengers[3], PassengerId = passengers[3].Id, SeatNumber = "3D", HasHandLuggage = true, BaggageWeight = 5 },
 
         new Ticket { Id = 11, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[4], PassengerId = passengers[4].Id, SeatNumber = "4A", HasHandLuggage = true, BaggageWeight = 8 },
-        new Ticket { Id = 12, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[5], PassengerId = passengers[5].Id, SeatNumber = "4B", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 12, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[5], PassengerId = passengers[5].Id, SeatNumber = "4B", HasHandLuggage = false },
         new Ticket { Id = 13, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[6], PassengerId = passengers[6].Id, SeatNumber = "4C", HasHandLuggage = true, BaggageWeight = 10 },
         new Ticket { Id = 14, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[7], PassengerId = passengers[7].Id, SeatNumber = "4D", HasHandLuggage = true, BaggageWeight = 5 },
         new Ticket { Id = 15, Flight = flights[2], FlightId = flights[2].Id, Passenger = passengers[8], PassengerId = passengers[8].Id, SeatNumber = "4E", HasHandLuggage = true, BaggageWeight = 7 },
 
         new Ticket { Id = 16, Flight = flights[3], FlightId = flights[3].Id, Passenger = passengers[0], PassengerId = passengers[0].Id, SeatNumber = "5A", HasHandLuggage = true, BaggageWeight = 10 },
         new Ticket { Id = 17, Flight = flights[3], FlightId = flights[3].Id, Passenger = passengers[1], PassengerId = passengers[1].Id, SeatNumber = "5B", HasHandLuggage = true, BaggageWeight = 5 },
-        new Ticket { Id = 18, Flight = flights[3], FlightId = flights[3].Id, Passenger = passengers[2], PassengerId = passengers[2].Id, SeatNumber = "5C", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 18, Flight = flights[3], FlightId = flights[3].Id, Passenger = passengers[2], PassengerId = passengers[2].Id, SeatNumber = "5C", HasHandLuggage = false },
 
         new Ticket { Id = 19, Flight = flights[4], FlightId = flights[4].Id, Passenger = passengers[3], PassengerId = passengers[3].Id, SeatNumber = "6A", HasHandLuggage = true, BaggageWeight = 6 },
         new Ticket { Id = 20, Flight = flights[4], FlightId = flights[4].Id, Passenger = passengers[4], PassengerId = passengers[4].Id, SeatNumber = "6B", HasHandLuggage = true, BaggageWeight = 4 },
 
         new Ticket { Id = 21, Flight = flights[5], FlightId = flights[5].Id, Passenger = passengers[5], PassengerId = passengers[5].Id, SeatNumber = "7A", HasHandLuggage = true, BaggageWeight = 12 },
 
-        new Ticket { Id = 22, Flight = flights[6], FlightId = flights[6].Id, Passenger = passengers[6], PassengerId = passengers[6].Id, SeatNumber = "8A", HasHandLuggage = false, BaggageWeight = 0 },
+        new Ticket { Id = 22, Flight = flights[6], FlightId = flights[6].Id, Passenger = passengers[6], PassengerId = passengers[6].Id, SeatNumber = "8A", HasHandLuggage = false },
 
         new Ticket { Id = 23, Flight = flights[7], FlightId = flights[7].Id, Passenger = passengers[7], PassengerId = passengers[7].Id, SeatNumber = "9A", HasHandLuggage = true, BaggageWeight = 7 },
 
