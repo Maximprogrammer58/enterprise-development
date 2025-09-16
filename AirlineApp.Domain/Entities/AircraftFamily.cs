@@ -6,17 +6,17 @@
 public class AircraftFamily
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the aircraft family.
+    /// Unique identifier of the aircraft family.
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the name of the aircraft family (e.g., A320 Family).
+    /// Name of the aircraft family.
     /// </summary>
     public required string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets the manufacturer of the aircraft family (e.g., Airbus, Boeing).
+    /// Manufacturer of the aircraft family.
     /// </summary>
     public required string Manufacturer { get; set; }
 }

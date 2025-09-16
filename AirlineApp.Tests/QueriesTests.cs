@@ -8,8 +8,6 @@ namespace AirlineApp.Tests;
 /// </summary>
 public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
 {
-    private readonly DataSeed _seed = seed;
-
     /// <summary>
     /// Tests that the top 5 flights by passenger count are returned correctly.
     /// </summary>
@@ -18,7 +16,7 @@ public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
     {
         var expected = new[] { ("FL001", 6), ("FL003", 5), ("FL002", 4), ("FL004", 3), ("FL005", 2) };
 
-        var query = _seed.Tickets
+        var query = seed.Tickets
             .GroupBy(t => t.Flight)
             .Select(g => new { Flight = g.Key, Count = g.Count() })
             .OrderByDescending(x => x.Count)
@@ -42,11 +40,11 @@ public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
     {
         var expectedCodes = new[] { "FL005", "FL009" };
 
-        var minDuration = _seed.Flights
+        var minDuration = seed.Flights
             .Where(f => f.Duration.HasValue)       
             .Min(f => f.Duration!.Value);
 
-        var queryCodes = _seed.Flights
+        var queryCodes = seed.Flights
             .Where(f => f.Duration.HasValue && f.Duration.Value == minDuration)
             .OrderBy(f => f.Code)
             .Select(f => f.Code)
@@ -63,9 +61,9 @@ public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
     {
         var expected = new[] { "Boris B", "Kirill K" };
 
-        var flight = _seed.Flights.Single(f => f.Code == "FL001");
+        var flight = seed.Flights.Single(f => f.Code == "FL001");
 
-        var passengerNames = _seed.Tickets
+        var passengerNames = seed.Tickets
             .Where(t => t.Flight == flight && (t.BaggageWeight ?? 0) == 0)
             .Select(t => t.Passenger.FullName) 
             .OrderBy(name => name)
@@ -80,18 +78,18 @@ public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
     [Fact]
     public void SummaryInfoModelInPeriod()
     {
-        var model = _seed.AircraftModels.Single(m => m.Name == "A320");
+        var model = seed.AircraftModels.Single(m => m.Name == "A320");
 
         var start = new DateTime(2025, 9, 1);
         var end = start.AddDays(1);
 
-        var flights = _seed.Flights
+        var flights = seed.Flights
             .Where(f => f.AircraftModel == model &&
                         f.DepartureDateTime.HasValue && f.ArrivalDateTime.HasValue &&
                         f.DepartureDateTime.Value >= start && f.ArrivalDateTime.Value <= end)
             .ToArray();
 
-        var tickets = _seed.Tickets
+        var tickets = seed.Tickets
             .Where(t => flights.Contains(t.Flight))
             .ToArray();
 
@@ -111,7 +109,7 @@ public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
     {
         var expectedCodes = new[] { "FL001", "FL004" };
 
-        var flightCodes = _seed.Flights
+        var flightCodes = seed.Flights
             .Where(f => f.Departure == "Moscow" && f.Arrival == "Berlin")
             .OrderBy(f => f.Code)
             .Select(f => f.Code)

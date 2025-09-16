@@ -6,42 +6,42 @@
 public class Flight
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the flight.
+    /// Unique identifier of the flight.
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the flight code (e.g., FL001).
+    /// Flight code
     /// </summary>
     public required string Code { get; set; }
 
     /// <summary>
-    /// Gets or sets the departure city or airport.
+    /// Point of departure.
     /// </summary>
     public required string Departure { get; set; }
 
     /// <summary>
-    /// Gets or sets the arrival city or airport.
+    /// Point of arrival.
     /// </summary>
     public required string Arrival { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time of departure.
+    /// Date and time of departure.
     /// </summary>
     public DateTime? DepartureDateTime { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time of arrival.
+    /// Date and time of arrival.
     /// </summary>
     public DateTime? ArrivalDateTime { get; set; }
 
     /// <summary>
-    /// Gets or sets the flight duration.
+    /// Flight duration.
     /// </summary>
     public TimeSpan? Duration { get; set; }
 
     /// <summary>
-    /// Gets or sets the aircraft model used for this flight.
+    /// Aircraft model used for this flight.
     /// </summary>
     public required AircraftModel AircraftModel { get; set; }
 }
