@@ -32,25 +32,9 @@
 ---
 
 ## Структура проекта
-```text
-AirlineApp/
-├── AirlineApp.Domain/
-│   └── Entities/
-│       ├── AircraftFamily.cs
-│       ├── AircraftModel.cs
-│       ├── Flight.cs
-│       ├── Passenger.cs
-│       └── Ticket.cs
-├── AirlineApp.Seed/
-│   └── DataSeed.cs
-├── AirlineApp.Tests/
-    └── QueriesTests.cs
-```
-
-
 
 - **Domain** — бизнес-логика и сущности.  
-- **Seed** — генерация примеров данных для тестов.  
+- **Tests.Seed** — генерация примеров данных для тестов.  
 - **Tests** — проверка корректности данных и запросов.    
 
 ---

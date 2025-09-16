@@ -1,138 +1,122 @@
-using Xunit;
-using System.Linq;
-using AirlineApp.Seed;
-using AirlineApp.Domain.Entities;
-using System.Collections.Generic;
+using AirlineApp.Tests.Seed;
 using System.Data;
 
 namespace AirlineApp.Tests;
 
 /// <summary>
-/// Tests queries on flights, passengers, and tickets, ensuring correct results.
+/// Contains unit tests for querying flights, passengers, and tickets.
 /// </summary>
-public class QueriesTests
+public class QueriesTests(DataSeed seed) : IClassFixture<DataSeed>
 {
-    private readonly DataSeed _seed;
-    private readonly List<AircraftFamily> _families;
-    private readonly List<AircraftModel> _models;
-    private readonly List<Flight> _flights;
-    private readonly List<Passenger> _passengers;
-    private readonly List<Ticket> _tickets;
-
-    public QueriesTests()
-    {
-        _seed = new DataSeed(new DateTime(2025, 9, 1));
-        _families = _seed.GetAircraftFamilies();
-        _models = _seed.GetAircraftModels(_families);
-        _flights = _seed.GetFlights(_models);
-        _passengers = _seed.GetPassengers();
-        _tickets = _seed.GetTickets(_flights, _passengers);
-    }
+    private readonly DataSeed _seed = seed;
 
     /// <summary>
-    /// Assignment: Display top 5 flights by the number of passengers transported.
+    /// Tests that the top 5 flights by passenger count are returned correctly.
     /// </summary>
     [Fact]
     public void TopFlightsByPassengerCount()
     {
         var expected = new[] { ("FL001", 6), ("FL003", 5), ("FL002", 4), ("FL004", 3), ("FL005", 2) };
 
-        var query = _tickets
+        var query = _seed.Tickets
             .GroupBy(t => t.Flight)
             .Select(g => new { Flight = g.Key, Count = g.Count() })
             .OrderByDescending(x => x.Count)
             .Take(5)
-            .ToList();
+            .ToArray();
 
-        Assert.Equal(expected.Length, query.Count);
+        Assert.Equal(expected.Length, query.Length);
+
         for (var i = 0; i < expected.Length; i++)
         {
-            Assert.NotNull(query[i].Flight);
             Assert.Equal(expected[i].Item1, query[i].Flight.Code);
             Assert.Equal(expected[i].Item2, query[i].Count);
         }
     }
 
     /// <summary>
-    /// Assignment: Display a list of flights with the minimal flight duration.
+    /// Tests that flights with the minimal duration are returned correctly.
     /// </summary>
     [Fact]
     public void FlightsWithMinimalDuration()
     {
         var expectedCodes = new[] { "FL005", "FL009" };
-        var minDuration = _flights.Min(f => f.Duration);
 
-        var query = _flights
-            .Where(f => f.Duration == minDuration)
+        var minDuration = _seed.Flights
+            .Where(f => f.Duration.HasValue)       
+            .Min(f => f.Duration!.Value);
+
+        var queryCodes = _seed.Flights
+            .Where(f => f.Duration.HasValue && f.Duration.Value == minDuration)
             .OrderBy(f => f.Code)
-            .ToList();
+            .Select(f => f.Code)
+            .ToArray();
 
-        Assert.Equal(expectedCodes.Length, query.Count);
-        Assert.Equal(expectedCodes, query.Select(f => f.Code).ToArray());
+        Assert.Equal(expectedCodes, queryCodes);
     }
 
     /// <summary>
-    /// Assignment: Display all passengers on a selected flight whose baggage weight is zero, ordered by full name.
+    /// Tests that passengers with zero baggage on a specific flight are returned correctly.
     /// </summary>
     [Fact]
     public void PassengersWithZeroBaggage()
     {
         var expected = new[] { "Boris B", "Kirill K" };
-        var flight = _flights.SingleOrDefault(f => f.Code == "FL001");
 
-        Assert.NotNull(flight);
+        var flight = _seed.Flights.Single(f => f.Code == "FL001");
 
-        var query = _tickets
-            .Where(t => t.FlightId == flight.Id && (t.BaggageWeight ?? 0) == 0)
-            .Select(t => t.Passenger.FullName)
+        var passengerNames = _seed.Tickets
+            .Where(t => t.Flight == flight && (t.BaggageWeight ?? 0) == 0)
+            .Select(t => t.Passenger.FullName) 
             .OrderBy(name => name)
-            .ToList();
+            .ToArray();
 
-        Assert.Equal(expected, query);
+        Assert.Equal(expected, passengerNames);
     }
 
     /// <summary>
-    /// Assignment: Display summary information for all flights of a selected aircraft model within a specified period.
+    /// Tests that summary information about a model's flights in a period is calculated correctly.
     /// </summary>
     [Fact]
     public void SummaryInfoModelInPeriod()
     {
-        var model = _models.SingleOrDefault(m => m.Name == "A320");
+        var model = _seed.AircraftModels.Single(m => m.Name == "A320");
 
-        Assert.NotNull(model);
+        var start = new DateTime(2025, 9, 1);
+        var end = start.AddDays(1);
 
-        var start = _seed.BaseDate;
-        var end = _seed.BaseDate.AddDays(1);
+        var flights = _seed.Flights
+            .Where(f => f.AircraftModel == model &&
+                        f.DepartureDateTime.HasValue && f.ArrivalDateTime.HasValue &&
+                        f.DepartureDateTime.Value >= start && f.ArrivalDateTime.Value <= end)
+            .ToArray();
 
-        var flights = _flights
-            .Where(f => f.AircraftModelId == model.Id && f.DepartureDateTime >= start && f.ArrivalDateTime <= end)
-            .ToList();
+        var tickets = _seed.Tickets
+            .Where(t => flights.Contains(t.Flight))
+            .ToArray();
 
-        var tickets = _tickets
-            .Where(t => flights.Any(f => f.Id == t.FlightId))
-            .ToList();
-
-        var totalPassengers = tickets.Count;
+        var totalPassengers = tickets.Length;
         var totalBaggage = tickets.Sum(t => t.BaggageWeight ?? 0);
 
-        Assert.Equal(2, flights.Count);
+        Assert.Equal(2, flights.Length);
         Assert.Equal(7, totalPassengers);
         Assert.Equal(55, totalBaggage);
     }
 
     /// <summary>
-    /// Assignment: Display all flights departing from a specified departure point to a specified arrival point.
+    /// Tests that flights from Moscow to Berlin are returned correctly.
     /// </summary>
     [Fact]
     public void FlightsFromMoscowToBerlin()
     {
         var expectedCodes = new[] { "FL001", "FL004" };
 
-        var query = _flights
+        var flightCodes = _seed.Flights
             .Where(f => f.Departure == "Moscow" && f.Arrival == "Berlin")
             .OrderBy(f => f.Code)
-            .ToList();
+            .Select(f => f.Code)
+            .ToArray();
 
-        Assert.Equal(expectedCodes, query.Select(f => f.Code).ToArray());
+        Assert.Equal(expectedCodes, flightCodes);
     }
 }
