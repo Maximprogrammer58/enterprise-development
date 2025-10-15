@@ -8,7 +8,7 @@ public class Passenger
     /// <summary>
     /// Unique identifier of the passenger.
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Passport number of the passenger.

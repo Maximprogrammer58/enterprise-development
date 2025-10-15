@@ -8,7 +8,7 @@ public class Ticket
     /// <summary>
     /// Unique identifier of the ticket.
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Flight associated with this ticket.

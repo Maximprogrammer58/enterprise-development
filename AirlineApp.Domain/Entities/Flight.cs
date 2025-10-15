@@ -8,7 +8,7 @@ public class Flight
     /// <summary>
     /// Unique identifier of the flight.
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Flight code
