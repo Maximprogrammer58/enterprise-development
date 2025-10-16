@@ -3,20 +3,11 @@
 public class TicketGetDto
 {
     public int Id { get; set; }
-    public string FlightCode { get; set; } = string.Empty;
-    public string PassengerName { get; set; } = string.Empty;
-    /// <summary>
-    /// Seat number assigned to the passenger.
-    /// </summary>
+    public required int FlightId { get; set; }
+    public required string FlightCode { get; set; }
+    public required int PassengerId { get; set; }
+    public required string PassengerName { get; set; }
     public required string SeatNumber { get; set; }
-
-    /// <summary>
-    /// Flag indicating whether the passenger has hand luggage.
-    /// </summary>
     public required bool HasHandLuggage { get; set; }
-
-    /// <summary>
-    /// Baggage weight.
-    /// </summary>
     public double? BaggageWeight { get; set; }
 }
