@@ -1,9 +1,10 @@
+using AirlineApp.Application.Mappers;
+using AirlineApp.Application.Services;
+using AirlineApp.Domain.Interfaces;
 using AirlineApp.Infrastructure.Persistence;
 using AirlineApp.Infrastructure.Repositories;
-using AirlineApp.Domain.Interfaces;
-using AirlineApp.Application.Mappers;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,30 +12,28 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositories
 builder.Services.AddScoped<IAircraftFamilyRepository, AircraftFamilyRepository>();
 builder.Services.AddScoped<IAircraftModelRepository, AircraftModelRepository>();
 builder.Services.AddScoped<IFlightRepository, FlightRepository>();
 builder.Services.AddScoped<IPassengerRepository, PassengerRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
-// AutoMapper
 builder.Services.AddAutoMapper(typeof(AppMappingProfile).Assembly);
+
+builder.Services.AddTransient<DbSeederForDb>();
+builder.Services.AddScoped<AnalyticsService>();
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    dbContext.Database.Migrate();
-
-    //await DbSeeder.SeedAsync(dbContext);
-    await DbSeederForDb.SeedAsync(dbContext);
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+    var seeder = new DbSeederForDb(context);
+    await seeder.SeedAsync();
 }
 
 if (app.Environment.IsDevelopment())

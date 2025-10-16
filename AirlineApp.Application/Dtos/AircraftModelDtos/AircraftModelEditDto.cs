@@ -2,9 +2,20 @@
 
 public class AircraftModelEditDto
 {
-    public string Name { get; set; } = string.Empty;
-    public int FlightRange { get; set; }
-    public int PassengerCapacity { get; set; }
-    public int CargoCapacity { get; set; }
-    public int FamilyId { get; set; }
+    /// <summary>
+    /// Name of the aircraft model.
+    /// </summary>
+    public required string Name { get; set; }
+    public required float FlightRange { get; set; }
+
+    /// <summary>
+    /// Passenger capacity of the aircraft model.
+    /// </summary>
+    public required float PassengerCapacity { get; set; }
+
+    /// <summary>
+    /// Cargo capacity of the aircraft model.
+    /// </summary>
+    public required float CargoCapacity { get; set; }
+    public required string FamilyName { get; set; }
 }

@@ -5,6 +5,7 @@ using AirlineApp.Application.Dtos.AircraftModelDtos;
 using AirlineApp.Application.Dtos.FlightDtos;
 using AirlineApp.Application.Dtos.PassengerDtos;
 using AirlineApp.Application.Dtos.TicketDtos;
+using AirlineApp.Application.Dtos.AnalyticsDtos;
 
 namespace AirlineApp.Application.Mappers;
 

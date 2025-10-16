@@ -2,12 +2,39 @@
 
 public class FlightGetDto
 {
+    /// <summary>
+    /// Unique identifier of the flight.
+    /// </summary>
     public int Id { get; set; }
-    public string Code { get; set; } = string.Empty;
-    public string Departure { get; set; } = string.Empty;
-    public string Arrival { get; set; } = string.Empty;
-    public DateTime DepartureDateTime { get; set; }
-    public DateTime ArrivalDateTime { get; set; }
-    public TimeSpan Duration { get; set; }
-    public string AircraftModelName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Flight code
+    /// </summary>
+    public required string Code { get; set; }
+
+    /// <summary>
+    /// Point of departure.
+    /// </summary>
+    public required string Departure { get; set; }
+
+    /// <summary>
+    /// Point of arrival.
+    /// </summary>
+    public required string Arrival { get; set; }
+
+    /// <summary>
+    /// Date and time of departure.
+    /// </summary>
+    public DateTime? DepartureDateTime { get; set; }
+
+    /// <summary>
+    /// Date and time of arrival.
+    /// </summary>
+    public DateTime? ArrivalDateTime { get; set; }
+
+    /// <summary>
+    /// Flight duration.
+    /// </summary>
+    public TimeSpan? Duration { get; set; }
+    public required string AircraftModelName { get; set; }
 }

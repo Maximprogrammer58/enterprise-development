@@ -2,9 +2,20 @@
 
 public class TicketEditDto
 {
-    public int FlightId { get; set; }
-    public int PassengerId { get; set; }
-    public string SeatNumber { get; set; } = string.Empty;
-    public bool HasHandLuggage { get; set; }
+    public string FlightCode { get; set; } = string.Empty;
+    public string PassengerName { get; set; } = string.Empty;
+    /// <summary>
+    /// Seat number assigned to the passenger.
+    /// </summary>
+    public required string SeatNumber { get; set; }
+
+    /// <summary>
+    /// Flag indicating whether the passenger has hand luggage.
+    /// </summary>
+    public required bool HasHandLuggage { get; set; }
+
+    /// <summary>
+    /// Baggage weight.
+    /// </summary>
     public double? BaggageWeight { get; set; }
 }

@@ -2,6 +2,13 @@
 
 public class AircraftFamilyEditDto
 {
-    public string Name { get; set; } = string.Empty;
-    public string Manufacturer { get; set; } = string.Empty;
+    /// <summary>
+    /// Name of the aircraft family.
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// Manufacturer of the aircraft family.
+    /// </summary>
+    public required string Manufacturer { get; set; }
 }
