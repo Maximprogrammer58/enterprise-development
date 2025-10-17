@@ -1,7 +1,5 @@
 ﻿using AirlineApp.Application.Dtos.AircraftFamilyDtos;
-using AirlineApp.Domain.Entities;
-using AirlineApp.Domain.Interfaces;
-using AutoMapper;
+using AirlineApp.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,53 +8,48 @@ namespace AirlineApp.API.Controllers;
 [Route("api/aircraft-families")]
 public class AircraftFamilyController : ControllerBase
 {
-    private readonly IAircraftFamilyRepository _repository;
-    private readonly IMapper _mapper;
+    private readonly AircraftFamilyService _service;
 
-    public AircraftFamilyController(IAircraftFamilyRepository repository, IMapper mapper)
+    public AircraftFamilyController(AircraftFamilyService service)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _service = service;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AircraftFamilyGetDto>>> GetAll()
-    {
-        var entities = await _repository.GetAllAsync();
-        return Ok(_mapper.Map<IEnumerable<AircraftFamilyGetDto>>(entities));
-    }
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AircraftFamilyGetDto>> GetById(int id)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity == null) return NotFound();
-        return Ok(_mapper.Map<AircraftFamilyGetDto>(entity));
+        var result = await _service.GetByIdAsync(id);
+        return result == null ? NotFound() : Ok(result);
     }
 
     [HttpPost]
     public async Task<ActionResult> Create(AircraftFamilyEditDto dto)
     {
-        var entity = _mapper.Map<AircraftFamily>(dto);
-        await _repository.AddAsync(entity);
-        return CreatedAtAction(nameof(GetById), new { id = entity.Id }, _mapper.Map<AircraftFamilyGetDto>(entity));
+        var created = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, AircraftFamilyEditDto dto)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return NotFound();
-        var entity = _mapper.Map<AircraftFamily>(dto);
-        entity.Id = id;
-        await _repository.UpdateAsync(entity);
-        return NoContent();
+        var success = await _service.UpdateAsync(id, dto);
+        return success ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return NotFound();
-        await _repository.DeleteAsync(id);
+        var (success, errorMessage) = await _service.DeleteAsync(id);
+
+        if (!success)
+        {
+            return string.IsNullOrEmpty(errorMessage) ? NotFound() : BadRequest(errorMessage);
+        }
+
         return NoContent();
     }
 }

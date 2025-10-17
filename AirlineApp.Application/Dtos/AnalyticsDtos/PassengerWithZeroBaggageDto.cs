@@ -2,6 +2,6 @@
 
 public class PassengerWithZeroBaggageDto
 {
-    public string PassengerName { get; set; } = null!;
-    public string FlightCode { get; set; } = null!;
+    public required string PassengerName { get; set; }
+    public required string FlightCode { get; set; }
 }

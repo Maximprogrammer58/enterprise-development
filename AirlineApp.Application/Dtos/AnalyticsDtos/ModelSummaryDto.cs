@@ -2,8 +2,8 @@
 
 public class ModelSummaryDto
 {
-    public string ModelName { get; set; } = null!;
-    public int TotalFlights { get; set; }
-    public int TotalPassengers { get; set; }
-    public double TotalBaggage { get; set; }
+    public required string ModelName { get; set; } 
+    public required int TotalFlights { get; set; }
+    public required int TotalPassengers { get; set; }
+    public required double TotalBaggage { get; set; }
 }

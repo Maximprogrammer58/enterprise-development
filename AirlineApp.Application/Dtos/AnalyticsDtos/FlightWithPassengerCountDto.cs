@@ -2,7 +2,7 @@
 
 public class FlightWithPassengerCountDto
 {
-    public string FlightCode { get; set; } = null!;
-    public int PassengerCount { get; set; }
+    public required string FlightCode { get; set; } 
+    public required int PassengerCount { get; set; }
 }
 

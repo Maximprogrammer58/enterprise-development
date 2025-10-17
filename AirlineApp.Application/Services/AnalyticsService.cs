@@ -17,7 +17,6 @@ public class AnalyticsService
         _ticketRepository = ticketRepository;
     }
 
-    // 1️⃣ Топ 5 рейсов по количеству пассажиров
     public async Task<List<FlightWithPassengerCountDto>> GetTopFlightsByPassengerCountAsync()
     {
         var tickets = await _ticketRepository.GetAllAsync();
@@ -34,7 +33,6 @@ public class AnalyticsService
             .ToList();
     }
 
-    // 2️⃣ Пассажиры с нулевым багажом на рейсе
     public async Task<List<PassengerWithZeroBaggageDto>> GetPassengersWithZeroBaggageAsync(string flightCode)
     {
         var tickets = await _ticketRepository.GetAllAsync();
@@ -50,7 +48,6 @@ public class AnalyticsService
             .ToList();
     }
 
-    // 3️⃣ Суммарная информация по модели самолетов за период
     public async Task<ModelSummaryDto> GetSummaryByModelInPeriodAsync(string modelName, DateTime start, DateTime end)
     {
         var flights = (await _flightRepository.GetAllAsync())
@@ -72,7 +69,6 @@ public class AnalyticsService
         };
     }
 
-    // 4️⃣ Рейсы из города A в город B
     public async Task<List<string>> GetFlightsFromToAsync(string departure, string arrival)
     {
         var flights = await _flightRepository.GetAllAsync();
@@ -83,7 +79,6 @@ public class AnalyticsService
             .ToList();
     }
 
-    // 5️⃣ Рейсы с минимальной продолжительностью
     public async Task<List<string>> GetFlightsWithMinimalDurationAsync()
     {
         var flights = await _flightRepository.GetAllAsync();

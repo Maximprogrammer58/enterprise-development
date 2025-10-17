@@ -24,7 +24,13 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddAutoMapper(typeof(AppMappingProfile).Assembly);
 
 builder.Services.AddTransient<DbSeederForDb>();
+
 builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddScoped<AircraftFamilyService>();
+builder.Services.AddScoped<AircraftModelService>();
+builder.Services.AddScoped<FlightService>();
+builder.Services.AddScoped<PassengerService>();
+builder.Services.AddScoped<TicketService>();
 
 var app = builder.Build();
 

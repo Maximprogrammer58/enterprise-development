@@ -1,7 +1,5 @@
 ﻿using AirlineApp.Application.Dtos.FlightDtos;
-using AirlineApp.Domain.Entities;
-using AirlineApp.Domain.Interfaces;
-using AutoMapper;
+using AirlineApp.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,82 +8,44 @@ namespace AirlineApp.API.Controllers;
 [Route("api/flights")]
 public class FlightController : ControllerBase
 {
-    private readonly IFlightRepository _repository;
-    private readonly IAircraftModelRepository _modelRepository;
-    private readonly IMapper _mapper;
+    private readonly FlightService _service;
 
-    public FlightController(IFlightRepository repository, IAircraftModelRepository modelRepository, IMapper mapper)
+    public FlightController(FlightService service)
     {
-        _repository = repository;
-        _modelRepository = modelRepository;
-        _mapper = mapper;
+        _service = service;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FlightGetDto>>> GetAll()
-    {
-        var entities = await _repository.GetAllAsync();
-        return Ok(_mapper.Map<IEnumerable<FlightGetDto>>(entities));
-    }
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<FlightGetDto>> GetById(int id)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity == null) return NotFound();
-        return Ok(_mapper.Map<FlightGetDto>(entity));
+        var result = await _service.GetByIdAsync(id);
+        return result == null ? NotFound() : Ok(result);
     }
 
     [HttpPost]
     public async Task<ActionResult> Create(FlightEditDto dto)
     {
-        var model = await _modelRepository.GetByIdAsync(dto.AircraftModelId);
-        if (model == null) return BadRequest($"AircraftModel with Id {dto.AircraftModelId} not found");
-
-        var flight = new Flight
-        {
-            Code = dto.Code,
-            Departure = dto.Departure,
-            Arrival = dto.Arrival,
-            DepartureDateTime = dto.DepartureDateTime,
-            ArrivalDateTime = dto.ArrivalDateTime,
-            Duration = dto.Duration,
-            AircraftModel = model
-        };
-
-        await _repository.AddAsync(flight);
-        return CreatedAtAction(nameof(GetById), new { id = flight.Id }, _mapper.Map<FlightGetDto>(flight));
+        var (success, result, error) = await _service.CreateAsync(dto);
+        if (!success) return BadRequest(error);
+        return CreatedAtAction(nameof(GetById), new { id = result!.Id }, result);
     }
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, FlightEditDto dto)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return NotFound();
-
-        var model = await _modelRepository.GetByIdAsync(dto.AircraftModelId);
-        if (model == null) return BadRequest($"AircraftModel with Id {dto.AircraftModelId} not found");
-
-        var flight = new Flight
-        {
-            Id = id,
-            Code = dto.Code,
-            Departure = dto.Departure,
-            Arrival = dto.Arrival,
-            DepartureDateTime = dto.DepartureDateTime,
-            ArrivalDateTime = dto.ArrivalDateTime,
-            Duration = dto.Duration,
-            AircraftModel = model
-        };
-
-        await _repository.UpdateAsync(flight);
+        var (success, error) = await _service.UpdateAsync(id, dto);
+        if (!success) return BadRequest(error ?? "Not found");
         return NoContent();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return NotFound();
-        await _repository.DeleteAsync(id);
-        return NoContent();
+        var success = await _service.DeleteAsync(id);
+        return success ? NoContent() : NotFound();
     }
 }
