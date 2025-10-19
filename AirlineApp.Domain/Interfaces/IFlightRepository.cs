@@ -2,12 +2,8 @@
 
 namespace AirlineApp.Domain.Interfaces;
 
-public interface IFlightRepository
-{
-    public Task<IEnumerable<Flight>> GetAllAsync();
-    public Task<Flight?> GetByIdAsync(int id);
-    public Task<bool> ExistsByIdAsync(int id);
-    public Task AddAsync(Flight flight);
-    public Task UpdateAsync(Flight flight);
-    public Task DeleteAsync(int id);
-}
+/// <summary>
+/// Repository for managing Flight entities.
+/// Provides CRUD operations and existence checks.
+/// </summary>
+public interface IFlightRepository : IGenericRepository<Flight> { }

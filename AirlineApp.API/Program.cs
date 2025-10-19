@@ -3,8 +3,9 @@ using AirlineApp.Application.Services;
 using AirlineApp.Domain.Interfaces;
 using AirlineApp.Infrastructure.Persistence;
 using AirlineApp.Infrastructure.Repositories;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,13 @@ builder.Services.AddScoped<AircraftModelService>();
 builder.Services.AddScoped<FlightService>();
 builder.Services.AddScoped<PassengerService>();
 builder.Services.AddScoped<TicketService>();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+    options.IncludeXmlComments(xmlPath);
+});
 
 var app = builder.Build();
 

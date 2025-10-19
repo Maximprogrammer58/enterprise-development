@@ -4,48 +4,70 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
 
+/// <summary>
+/// Controller for managing Tickets.
+/// Provides endpoints to create, read, update, and delete ticket records.
+/// </summary>
 [ApiController]
 [Route("api/tickets")]
-public class TicketController : ControllerBase
+public class TicketController(TicketService service) : ControllerBase
 {
-    private readonly TicketService _service;
-
-    public TicketController(TicketService service)
-    {
-        _service = service;
-    }
-
+    /// <summary>
+    /// Retrieves all tickets.
+    /// </summary>
+    /// <returns>A list of <see cref="TicketGetDto"/> objects.</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TicketGetDto>>> GetAll()
-        => Ok(await _service.GetAllAsync());
+        => Ok(await service.GetAllAsync());
 
+    /// <summary>
+    /// Retrieves a specific ticket by Id.
+    /// </summary>
+    /// <param name="id">The Id of the ticket to retrieve.</param>
+    /// <returns>A <see cref="TicketGetDto"/> if found; otherwise, 404 NotFound.</returns>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<TicketGetDto>> GetById(int id)
     {
-        var result = await _service.GetByIdAsync(id);
+        var result = await service.GetByIdAsync(id);
         return result == null ? NotFound() : Ok(result);
     }
 
+    /// <summary>
+    /// Creates a new ticket.
+    /// </summary>
+    /// <param name="dto">The data for the new ticket.</param>
+    /// <returns>The created ticket with its Id.</returns>
     [HttpPost]
-    public async Task<ActionResult> Create(TicketEditDto dto)
+    public async Task<ActionResult> Create([FromBody] TicketEditDto dto)
     {
-        var (success, result, error) = await _service.CreateAsync(dto);
+        var (success, result, error) = await service.CreateAsync(dto);
         if (!success) return BadRequest(error);
         return CreatedAtAction(nameof(GetById), new { id = result!.Id }, result);
     }
 
+    /// <summary>
+    /// Updates an existing ticket.
+    /// </summary>
+    /// <param name="id">The Id of the ticket to update.</param>
+    /// <param name="dto">The updated ticket data.</param>
+    /// <returns>NoContent if updated; 404 NotFound or 400 BadRequest if invalid.</returns>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Update(int id, TicketEditDto dto)
+    public async Task<ActionResult> Update(int id, [FromBody] TicketEditDto dto)
     {
-        var (success, error) = await _service.UpdateAsync(id, dto);
+        var (success, error) = await service.UpdateAsync(id, dto);
         if (!success) return error == null ? NotFound() : BadRequest(error);
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes a ticket by Id.
+    /// </summary>
+    /// <param name="id">The Id of the ticket to delete.</param>
+    /// <returns>NoContent if deleted; 404 NotFound if ticket not found.</returns>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var success = await _service.DeleteAsync(id);
+        var success = await service.DeleteAsync(id);
         return success ? NoContent() : NotFound();
     }
 }

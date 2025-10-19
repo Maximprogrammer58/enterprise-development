@@ -1,6 +1,4 @@
 ﻿using AirlineApp.Domain.Entities;
-using System;
-using System.Collections.Generic;
 
 namespace AirlineApp.Tests.Seed;
 
@@ -52,8 +50,6 @@ public class DataSeed
         new AircraftModel { Name = "SSJ100", Family = families[9], FlightRange = 4500f, PassengerCapacity = 100f, CargoCapacity = 10000f }
     };
 
-
-
     private static List<Passenger> InitPassengers() => new()
     {
         new Passenger { PassportNumber = "P001", FullName = "Alex A", BirthDate = new DateOnly(1990,1,1) },
@@ -81,8 +77,6 @@ public class DataSeed
         new Flight { Code = "FL009", Departure = "Toronto", Arrival = "Montreal", DepartureDateTime = new DateTime(2025,9,1,19,0,0), ArrivalDateTime = new DateTime(2025,9,1,20,0,0), Duration = TimeSpan.FromHours(1), AircraftModel = models[8] },
         new Flight { Code = "FL010", Departure = "Shanghai", Arrival = "Beijing", DepartureDateTime = new DateTime(2025,9,1,7,0,0), ArrivalDateTime = new DateTime(2025,9,1,9,0,0), Duration = TimeSpan.FromHours(2), AircraftModel = models[0] }
     };
-
-
 
     private static List<Ticket> InitTickets(List<Flight> flights, List<Passenger> passengers) => new()
     {

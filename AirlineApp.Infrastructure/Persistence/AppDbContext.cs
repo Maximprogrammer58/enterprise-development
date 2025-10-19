@@ -1,12 +1,11 @@
 ﻿using AirlineApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace AirlineApp.Infrastructure.Persistence;
 
 /// <summary>
-/// EF Core database context for the airline application.
+/// Represents the database context for the Airline application.
+/// Configures entities, relationships, and constraints.
 /// </summary>
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
@@ -20,7 +19,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
-        // AircraftFamily
         modelBuilder.Entity<AircraftFamily>(b =>
         {
             b.HasKey(x => x.Id);
@@ -29,7 +27,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.Manufacturer).IsRequired().HasMaxLength(128);
         });
 
-        // AircraftModel
         modelBuilder.Entity<AircraftModel>(b =>
         {
             b.HasKey(x => x.Id);
@@ -45,7 +42,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // Flight
         modelBuilder.Entity<Flight>(b =>
         {
             b.HasKey(x => x.Id);
@@ -63,7 +59,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Passenger
         modelBuilder.Entity<Passenger>(b =>
         {
             b.HasKey(x => x.Id);
@@ -72,7 +67,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.FullName).IsRequired().HasMaxLength(128);
         });
 
-        // Ticket
         modelBuilder.Entity<Ticket>(b =>
         {
             b.HasKey(x => x.Id);

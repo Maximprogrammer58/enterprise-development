@@ -4,22 +4,18 @@ using AirlineApp.Domain.Interfaces;
 
 namespace AirlineApp.Application.Services;
 
-public class AnalyticsService
-{
-    private readonly IFlightRepository _flightRepository;
-    private readonly ITicketRepository _ticketRepository;
-
-    public AnalyticsService(
-        IFlightRepository flightRepository,
+/// <summary>
+/// Provides analytics operations for flights, passengers, and aircraft models.
+/// </summary>
+public class AnalyticsService(IFlightRepository flightRepository,
         ITicketRepository ticketRepository)
-    {
-        _flightRepository = flightRepository;
-        _ticketRepository = ticketRepository;
-    }
-
+{
+    /// <summary>
+    /// Returns the top 5 flights with the highest number of passengers.
+    /// </summary>
     public async Task<List<FlightWithPassengerCountDto>> GetTopFlightsByPassengerCountAsync()
     {
-        var tickets = await _ticketRepository.GetAllAsync();
+        var tickets = await ticketRepository.GetAllAsync();
 
         return tickets
             .GroupBy(t => t.Flight)
@@ -33,9 +29,12 @@ public class AnalyticsService
             .ToList();
     }
 
+    /// <summary>
+    /// Returns passengers with zero baggage for a given flight.
+    /// </summary>
     public async Task<List<PassengerWithZeroBaggageDto>> GetPassengersWithZeroBaggageAsync(string flightCode)
     {
-        var tickets = await _ticketRepository.GetAllAsync();
+        var tickets = await ticketRepository.GetAllAsync();
 
         return tickets
             .Where(t => t.Flight.Code == flightCode && (t.BaggageWeight ?? 0) == 0)
@@ -48,15 +47,18 @@ public class AnalyticsService
             .ToList();
     }
 
+    /// <summary>
+    /// Returns summary information about flights for a specific model within a date range.
+    /// </summary>
     public async Task<ModelSummaryDto> GetSummaryByModelInPeriodAsync(string modelName, DateTime start, DateTime end)
     {
-        var flights = (await _flightRepository.GetAllAsync())
+        var flights = (await flightRepository.GetAllAsync())
             .Where(f => f.AircraftModel.Name == modelName &&
                         f.DepartureDateTime.HasValue && f.ArrivalDateTime.HasValue &&
                         f.DepartureDateTime.Value >= start && f.ArrivalDateTime.Value <= end)
             .ToList();
 
-        var tickets = (await _ticketRepository.GetAllAsync())
+        var tickets = (await ticketRepository.GetAllAsync())
             .Where(t => flights.Contains(t.Flight))
             .ToList();
 
@@ -69,9 +71,12 @@ public class AnalyticsService
         };
     }
 
+    /// <summary>
+    /// Returns flight codes for flights from a specific departure to arrival location.
+    /// </summary>
     public async Task<List<string>> GetFlightsFromToAsync(string departure, string arrival)
     {
-        var flights = await _flightRepository.GetAllAsync();
+        var flights = await flightRepository.GetAllAsync();
         return flights
             .Where(f => f.Departure == departure && f.Arrival == arrival)
             .OrderBy(f => f.Code)
@@ -79,9 +84,12 @@ public class AnalyticsService
             .ToList();
     }
 
+    /// <summary>
+    /// Returns flight codes of flights with the minimal duration.
+    /// </summary>
     public async Task<List<string>> GetFlightsWithMinimalDurationAsync()
     {
-        var flights = await _flightRepository.GetAllAsync();
+        var flights = await flightRepository.GetAllAsync();
         var minDuration = flights
             .Where(f => f.Duration.HasValue)
             .Min(f => f.Duration!.Value);

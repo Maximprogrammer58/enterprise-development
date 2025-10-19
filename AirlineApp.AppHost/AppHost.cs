@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Hosting;
-using Aspire.Hosting;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 var mssql = builder.AddSqlServer("sqlserver");

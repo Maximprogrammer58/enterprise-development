@@ -5,43 +5,35 @@ using AutoMapper;
 
 namespace AirlineApp.Application.Services;
 
-public class TicketService
-{
-    private readonly ITicketRepository _ticketRepository;
-    private readonly IFlightRepository _flightRepository;
-    private readonly IPassengerRepository _passengerRepository;
-    private readonly IMapper _mapper;
-
-    public TicketService(
-        ITicketRepository ticketRepository,
+/// <summary>
+/// Service for managing tickets.
+/// </summary>
+public class TicketService(ITicketRepository ticketRepository,
         IFlightRepository flightRepository,
         IPassengerRepository passengerRepository,
         IMapper mapper)
-    {
-        _ticketRepository = ticketRepository;
-        _flightRepository = flightRepository;
-        _passengerRepository = passengerRepository;
-        _mapper = mapper;
-    }
-
+{
+    /// <summary>Gets all tickets.</summary>
     public async Task<IEnumerable<TicketGetDto>> GetAllAsync()
     {
-        var tickets = await _ticketRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<TicketGetDto>>(tickets);
+        var tickets = await ticketRepository.GetAllAsync();
+        return mapper.Map<IEnumerable<TicketGetDto>>(tickets);
     }
 
+    /// <summary>Gets a single ticket by ID.</summary>
     public async Task<TicketGetDto?> GetByIdAsync(int id)
     {
-        var ticket = await _ticketRepository.GetByIdAsync(id);
-        return ticket == null ? null : _mapper.Map<TicketGetDto>(ticket);
+        var ticket = await ticketRepository.GetByIdAsync(id);
+        return ticket == null ? null : mapper.Map<TicketGetDto>(ticket);
     }
 
+    /// <summary>Creates a new ticket.</summary>
     public async Task<(bool Success, TicketGetDto? Result, string? ErrorMessage)> CreateAsync(TicketEditDto dto)
     {
-        var flight = await _flightRepository.GetByIdAsync(dto.FlightId);
+        var flight = await flightRepository.GetByIdAsync(dto.FlightId);
         if (flight == null) return (false, null, $"Flight with Id {dto.FlightId} not found");
 
-        var passenger = await _passengerRepository.GetByIdAsync(dto.PassengerId);
+        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
         if (passenger == null) return (false, null, $"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
@@ -53,18 +45,19 @@ public class TicketService
             BaggageWeight = dto.BaggageWeight
         };
 
-        await _ticketRepository.AddAsync(ticket);
-        return (true, _mapper.Map<TicketGetDto>(ticket), null);
+        await ticketRepository.AddAsync(ticket);
+        return (true, mapper.Map<TicketGetDto>(ticket), null);
     }
 
+    /// <summary>Updates an existing ticket.</summary>
     public async Task<(bool Success, string? ErrorMessage)> UpdateAsync(int id, TicketEditDto dto)
     {
-        if (!await _ticketRepository.ExistsByIdAsync(id)) return (false, null);
+        if (!await ticketRepository.ExistsByIdAsync(id)) return (false, null);
 
-        var flight = await _flightRepository.GetByIdAsync(dto.FlightId);
+        var flight = await flightRepository.GetByIdAsync(dto.FlightId);
         if (flight == null) return (false, $"Flight with Id {dto.FlightId} not found");
 
-        var passenger = await _passengerRepository.GetByIdAsync(dto.PassengerId);
+        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
         if (passenger == null) return (false, $"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
@@ -77,14 +70,15 @@ public class TicketService
             BaggageWeight = dto.BaggageWeight
         };
 
-        await _ticketRepository.UpdateAsync(ticket);
+        await ticketRepository.UpdateAsync(ticket);
         return (true, null);
     }
 
+    /// <summary>Deletes a ticket.</summary>
     public async Task<bool> DeleteAsync(int id)
     {
-        if (!await _ticketRepository.ExistsByIdAsync(id)) return false;
-        await _ticketRepository.DeleteAsync(id);
+        if (!await ticketRepository.ExistsByIdAsync(id)) return false;
+        await ticketRepository.DeleteAsync(id);
         return true;
     }
 }

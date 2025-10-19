@@ -5,65 +5,60 @@ using AutoMapper;
 
 namespace AirlineApp.Application.Services;
 
-public class AircraftFamilyService
-{
-    private readonly IAircraftFamilyRepository _repository;
-    private readonly IAircraftModelRepository _modelRepository;
-    private readonly IMapper _mapper;
-
-    public AircraftFamilyService(
-        IAircraftFamilyRepository repository,
+/// <summary>
+/// Service for managing aircraft families.
+/// </summary>
+public class AircraftFamilyService(IAircraftFamilyRepository repository,
         IAircraftModelRepository modelRepository,
         IMapper mapper)
-    {
-        _repository = repository;
-        _modelRepository = modelRepository;
-        _mapper = mapper;
-    }
-
+{
+    /// <summary>Gets all aircraft families.</summary>
     public async Task<IEnumerable<AircraftFamilyGetDto>> GetAllAsync()
     {
-        var entities = await _repository.GetAllAsync();
-        return _mapper.Map<IEnumerable<AircraftFamilyGetDto>>(entities);
+        var entities = await repository.GetAllAsync();
+        return mapper.Map<IEnumerable<AircraftFamilyGetDto>>(entities);
     }
 
+    /// <summary>Gets a single aircraft family by ID.</summary>
     public async Task<AircraftFamilyGetDto?> GetByIdAsync(int id)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        return entity == null ? null : _mapper.Map<AircraftFamilyGetDto>(entity);
+        var entity = await repository.GetByIdAsync(id);
+        return entity == null ? null : mapper.Map<AircraftFamilyGetDto>(entity);
     }
 
+    /// <summary>Creates a new aircraft family.</summary>
     public async Task<AircraftFamilyGetDto> CreateAsync(AircraftFamilyEditDto dto)
     {
-        var entity = _mapper.Map<AircraftFamily>(dto);
-        await _repository.AddAsync(entity);
-        return _mapper.Map<AircraftFamilyGetDto>(entity);
+        var entity = mapper.Map<AircraftFamily>(dto);
+        await repository.AddAsync(entity);
+        return mapper.Map<AircraftFamilyGetDto>(entity);
     }
 
+    /// <summary>Updates an existing aircraft family.</summary>
     public async Task<bool> UpdateAsync(int id, AircraftFamilyEditDto dto)
     {
-        if (!await _repository.ExistsByIdAsync(id))
+        if (!await repository.ExistsByIdAsync(id))
             return false;
 
-        var entity = _mapper.Map<AircraftFamily>(dto);
+        var entity = mapper.Map<AircraftFamily>(dto);
         entity.Id = id;
-        await _repository.UpdateAsync(entity);
+        await repository.UpdateAsync(entity);
         return true;
     }
 
+    /// <summary>Deletes an aircraft family.</summary>
     public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int id)
     {
-        if (!await _repository.ExistsByIdAsync(id))
+        if (!await repository.ExistsByIdAsync(id))
             return (false, "AircraftFamily not found");
 
-        // Проверяем, есть ли связанные модели
-        var models = await _modelRepository.GetAllAsync();
+        var models = await modelRepository.GetAllAsync();
         if (models.Any(m => m.Family.Id == id))
         {
             return (false, "Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");
         }
 
-        await _repository.DeleteAsync(id);
+        await repository.DeleteAsync(id);
         return (true, null);
     }
 }

@@ -5,49 +5,48 @@ using AutoMapper;
 
 namespace AirlineApp.Application.Services;
 
-public class PassengerService
+/// <summary>
+/// Service for managing passengers.
+/// </summary>
+public class PassengerService(IPassengerRepository repository, IMapper mapper)
 {
-    private readonly IPassengerRepository _repository;
-    private readonly IMapper _mapper;
-
-    public PassengerService(IPassengerRepository repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
-
+    /// <summary>Gets all passengers.</summary>
     public async Task<IEnumerable<PassengerGetDto>> GetAllAsync()
     {
-        var passengers = await _repository.GetAllAsync();
-        return _mapper.Map<IEnumerable<PassengerGetDto>>(passengers);
+        var passengers = await repository.GetAllAsync();
+        return mapper.Map<IEnumerable<PassengerGetDto>>(passengers);
     }
 
+    /// <summary>Gets a single passenger by ID.</summary>
     public async Task<PassengerGetDto?> GetByIdAsync(int id)
     {
-        var passenger = await _repository.GetByIdAsync(id);
-        return passenger == null ? null : _mapper.Map<PassengerGetDto>(passenger);
+        var passenger = await repository.GetByIdAsync(id);
+        return passenger == null ? null : mapper.Map<PassengerGetDto>(passenger);
     }
 
+    ///  /// <summary>Creates a new passenger.</summary>
     public async Task<PassengerGetDto> CreateAsync(PassengerEditDto dto)
     {
-        var passenger = _mapper.Map<Passenger>(dto);
-        await _repository.AddAsync(passenger);
-        return _mapper.Map<PassengerGetDto>(passenger);
+        var passenger = mapper.Map<Passenger>(dto);
+        await repository.AddAsync(passenger);
+        return mapper.Map<PassengerGetDto>(passenger);
     }
 
+    /// <summary>Updates an existing passenger.</summary>
     public async Task<bool> UpdateAsync(int id, PassengerEditDto dto)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return false;
-        var passenger = _mapper.Map<Passenger>(dto);
+        if (!await repository.ExistsByIdAsync(id)) return false;
+        var passenger = mapper.Map<Passenger>(dto);
         passenger.Id = id;
-        await _repository.UpdateAsync(passenger);
+        await repository.UpdateAsync(passenger);
         return true;
     }
 
+    /// <summary>Deletes a passenger.</summary>
     public async Task<bool> DeleteAsync(int id)
     {
-        if (!await _repository.ExistsByIdAsync(id)) return false;
-        await _repository.DeleteAsync(id);
+        if (!await repository.ExistsByIdAsync(id)) return false;
+        await repository.DeleteAsync(id);
         return true;
     }
 }

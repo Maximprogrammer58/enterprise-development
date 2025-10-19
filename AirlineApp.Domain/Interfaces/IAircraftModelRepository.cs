@@ -2,12 +2,8 @@
 
 namespace AirlineApp.Domain.Interfaces;
 
-public interface IAircraftModelRepository
-{
-    public Task<IEnumerable<AircraftModel>> GetAllAsync();
-    public Task<AircraftModel?> GetByIdAsync(int id);
-    public Task<bool> ExistsByIdAsync(int id);
-    public Task AddAsync(AircraftModel model);
-    public Task UpdateAsync(AircraftModel model);
-    public Task DeleteAsync(int id);
-}
+/// <summary>
+/// Repository for managing AircraftModel entities.
+/// Provides CRUD operations and existence checks.
+/// </summary>
+public interface IAircraftModelRepository : IGenericRepository<AircraftModel> { }
