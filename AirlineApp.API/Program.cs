@@ -1,9 +1,12 @@
 using AirlineApp.API.Middlewares;
 using AirlineApp.Application.Mappers;
 using AirlineApp.Application.Services;
+using AirlineApp.Application.Validators;
 using AirlineApp.Domain.Interfaces;
 using AirlineApp.Infrastructure.Persistence;
 using AirlineApp.Infrastructure.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -32,6 +35,9 @@ builder.Services.AddScoped<AircraftModelService>();
 builder.Services.AddScoped<FlightService>();
 builder.Services.AddScoped<PassengerService>();
 builder.Services.AddScoped<TicketService>();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<AircraftFamilyEditDtoValidator>();
 
 builder.Services.AddSwaggerGen(options =>
 {
