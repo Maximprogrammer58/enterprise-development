@@ -33,20 +33,15 @@ public class PassengerService(IPassengerRepository repository, IMapper mapper)
     }
 
     /// <summary>Updates an existing passenger.</summary>
-    public async Task<bool> UpdateAsync(int id, PassengerEditDto dto)
+    public async Task UpdateAsync(int id, PassengerEditDto dto)
     {
-        if (!await repository.ExistsByIdAsync(id)) return false;
         var passenger = mapper.Map<Passenger>(dto);
         passenger.Id = id;
         await repository.UpdateAsync(passenger);
-        return true;
     }
 
+
     /// <summary>Deletes a passenger.</summary>
-    public async Task<bool> DeleteAsync(int id)
-    {
-        if (!await repository.ExistsByIdAsync(id)) return false;
+    public async Task DeleteAsync(int id) =>
         await repository.DeleteAsync(id);
-        return true;
-    }
 }

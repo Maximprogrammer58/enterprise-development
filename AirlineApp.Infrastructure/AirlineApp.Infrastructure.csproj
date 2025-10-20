@@ -24,4 +24,8 @@
     <ProjectReference Include="..\AirlineApp.Tests\AirlineApp.Tests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

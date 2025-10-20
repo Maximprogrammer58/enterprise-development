@@ -40,9 +40,8 @@ public class FlightController(FlightService service) : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] FlightEditDto dto)
     {
-        var (success, result, error) = await service.CreateAsync(dto);
-        if (!success) return BadRequest(error);
-        return CreatedAtAction(nameof(GetById), new { id = result!.Id }, result);
+        var result = await service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     /// <summary>
@@ -54,8 +53,7 @@ public class FlightController(FlightService service) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, [FromBody] FlightEditDto dto)
     {
-        var (success, error) = await service.UpdateAsync(id, dto);
-        if (!success) return BadRequest(error ?? "Not found");
+        await service.UpdateAsync(id, dto);
         return NoContent();
     }
 
@@ -67,7 +65,7 @@ public class FlightController(FlightService service) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var success = await service.DeleteAsync(id);
-        return success ? NoContent() : NotFound();
+        await service.DeleteAsync(id);
+        return NoContent();
     }
 }

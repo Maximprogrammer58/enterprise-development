@@ -118,6 +118,12 @@ namespace AirlineApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AircraftFamilies_Name_Manufacturer",
+                table: "AircraftFamilies",
+                columns: new[] { "Name", "Manufacturer" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AircraftModels_FamilyId",
                 table: "AircraftModels",
                 column: "FamilyId");
@@ -126,6 +132,18 @@ namespace AirlineApp.Infrastructure.Migrations
                 name: "IX_Flights_AircraftModelId",
                 table: "Flights",
                 column: "AircraftModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flights_Code",
+                table: "Flights",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Passengers_PassportNumber",
+                table: "Passengers",
+                column: "PassportNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_FlightId",

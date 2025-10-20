@@ -53,8 +53,8 @@ public class AircraftFamilyController(AircraftFamilyService service) : Controlle
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, [FromBody] AircraftFamilyEditDto dto)
     {
-        var success = await service.UpdateAsync(id, dto);
-        return success ? NoContent() : NotFound();
+        await service.UpdateAsync(id, dto);
+        return NoContent();
     }
 
     /// <summary>
@@ -66,13 +66,7 @@ public class AircraftFamilyController(AircraftFamilyService service) : Controlle
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var (success, errorMessage) = await service.DeleteAsync(id);
-
-        if (!success)
-        {
-            return string.IsNullOrEmpty(errorMessage) ? NotFound() : BadRequest(errorMessage);
-        }
-
+        await service.DeleteAsync(id);
         return NoContent();
     }
 }

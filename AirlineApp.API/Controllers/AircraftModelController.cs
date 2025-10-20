@@ -38,11 +38,10 @@ public class AircraftModelController(AircraftModelService service) : ControllerB
     /// <param name="dto">The data for the new aircraft model.</param>
     /// <returns>The created aircraft model with its Id.</returns>
     [HttpPost]
-    public async Task<ActionResult> Create([FromBody] AircraftModelEditDto dto)
+    public async Task<ActionResult<AircraftModelGetDto>> Create([FromBody] AircraftModelEditDto dto)
     {
-        var (success, result, error) = await service.CreateAsync(dto);
-        if (!success) return BadRequest(error);
-        return CreatedAtAction(nameof(GetById), new { id = result!.Id }, result);
+        var result = await service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     /// <summary>
@@ -54,8 +53,7 @@ public class AircraftModelController(AircraftModelService service) : ControllerB
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, [FromBody] AircraftModelEditDto dto)
     {
-        var (success, error) = await service.UpdateAsync(id, dto);
-        if (!success) return BadRequest(error ?? "Not found");
+        await service.UpdateAsync(id, dto);
         return NoContent();
     }
 
@@ -68,9 +66,7 @@ public class AircraftModelController(AircraftModelService service) : ControllerB
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var (success, error) = await service.DeleteAsync(id);
-        if (!success)
-            return string.IsNullOrEmpty(error) ? NotFound() : BadRequest(error);
+        await service.DeleteAsync(id);
         return NoContent();
     }
 }

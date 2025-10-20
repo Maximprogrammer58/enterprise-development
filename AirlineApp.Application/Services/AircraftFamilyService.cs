@@ -35,30 +35,20 @@ public class AircraftFamilyService(IAircraftFamilyRepository repository,
     }
 
     /// <summary>Updates an existing aircraft family.</summary>
-    public async Task<bool> UpdateAsync(int id, AircraftFamilyEditDto dto)
+    public async Task UpdateAsync(int id, AircraftFamilyEditDto dto)
     {
-        if (!await repository.ExistsByIdAsync(id))
-            return false;
-
         var entity = mapper.Map<AircraftFamily>(dto);
         entity.Id = id;
         await repository.UpdateAsync(entity);
-        return true;
     }
 
     /// <summary>Deletes an aircraft family.</summary>
-    public async Task<(bool Success, string? ErrorMessage)> DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
-        if (!await repository.ExistsByIdAsync(id))
-            return (false, "AircraftFamily not found");
-
         var models = await modelRepository.GetAllAsync();
         if (models.Any(m => m.Family.Id == id))
-        {
-            return (false, "Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");
-        }
+            throw new InvalidOperationException("Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");
 
         await repository.DeleteAsync(id);
-        return (true, null);
     }
 }

@@ -28,57 +28,44 @@ public class TicketService(ITicketRepository ticketRepository,
     }
 
     /// <summary>Creates a new ticket.</summary>
-    public async Task<(bool Success, TicketGetDto? Result, string? ErrorMessage)> CreateAsync(TicketEditDto dto)
+    public async Task<TicketGetDto> CreateAsync(TicketEditDto dto)
     {
         var flight = await flightRepository.GetByIdAsync(dto.FlightId);
-        if (flight == null) return (false, null, $"Flight with Id {dto.FlightId} not found");
-
         var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
-        if (passenger == null) return (false, null, $"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
         {
-            Flight = flight,
-            Passenger = passenger,
+            Flight = flight!,
+            Passenger = passenger!,
             SeatNumber = dto.SeatNumber,
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight
         };
 
         await ticketRepository.AddAsync(ticket);
-        return (true, mapper.Map<TicketGetDto>(ticket), null);
+        return mapper.Map<TicketGetDto>(ticket);
     }
 
     /// <summary>Updates an existing ticket.</summary>
-    public async Task<(bool Success, string? ErrorMessage)> UpdateAsync(int id, TicketEditDto dto)
+    public async Task UpdateAsync(int id, TicketEditDto dto)
     {
-        if (!await ticketRepository.ExistsByIdAsync(id)) return (false, null);
-
         var flight = await flightRepository.GetByIdAsync(dto.FlightId);
-        if (flight == null) return (false, $"Flight with Id {dto.FlightId} not found");
-
         var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
-        if (passenger == null) return (false, $"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
         {
             Id = id,
-            Flight = flight,
-            Passenger = passenger,
+            Flight = flight!,
+            Passenger = passenger!,
             SeatNumber = dto.SeatNumber,
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight
         };
 
         await ticketRepository.UpdateAsync(ticket);
-        return (true, null);
     }
 
     /// <summary>Deletes a ticket.</summary>
-    public async Task<bool> DeleteAsync(int id)
-    {
-        if (!await ticketRepository.ExistsByIdAsync(id)) return false;
-        await ticketRepository.DeleteAsync(id);
-        return true;
-    }
+    public async Task DeleteAsync(int id) =>
+         await ticketRepository.DeleteAsync(id);
 }

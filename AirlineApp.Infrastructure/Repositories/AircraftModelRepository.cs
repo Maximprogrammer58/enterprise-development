@@ -44,16 +44,7 @@ public class AircraftModelRepository(AppDbContext context) : IAircraftModelRepos
     /// </summary>
     public async Task UpdateAsync(AircraftModel model)
     {
-        var existing = await context.AircraftModels.FindAsync(model.Id)
-            ?? throw new KeyNotFoundException($"Model with Id {model.Id} not found.");
-
-        existing.Name = model.Name;
-        existing.FlightRange = model.FlightRange;
-        existing.PassengerCapacity = model.PassengerCapacity;
-        existing.CargoCapacity = model.CargoCapacity;
-        existing.Family = model.Family;
-
-        context.AircraftModels.Update(existing);
+        context.AircraftModels.Update(model);
         await context.SaveChangesAsync();
     }
 

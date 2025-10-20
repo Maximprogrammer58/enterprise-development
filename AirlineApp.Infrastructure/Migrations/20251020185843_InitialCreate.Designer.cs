@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirlineApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251015064701_InitialCreate")]
+    [Migration("20251020185843_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,6 +44,9 @@ namespace AirlineApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name", "Manufacturer")
+                        .IsUnique();
 
                     b.ToTable("AircraftFamilies");
                 });
@@ -119,6 +122,9 @@ namespace AirlineApp.Infrastructure.Migrations
 
                     b.HasIndex("AircraftModelId");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Flights");
                 });
 
@@ -144,6 +150,9 @@ namespace AirlineApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PassportNumber")
+                        .IsUnique();
 
                     b.ToTable("Passengers");
                 });

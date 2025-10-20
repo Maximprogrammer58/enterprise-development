@@ -53,8 +53,8 @@ public class PassengerController(PassengerService service) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Update(int id, [FromBody] PassengerEditDto dto)
     {
-        var success = await service.UpdateAsync(id, dto);
-        return success ? NoContent() : NotFound();
+        await service.UpdateAsync(id, dto);
+        return NoContent();
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class PassengerController(PassengerService service) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var success = await service.DeleteAsync(id);
-        return success ? NoContent() : NotFound();
+        await service.DeleteAsync(id);
+        return NoContent();
     }
 }

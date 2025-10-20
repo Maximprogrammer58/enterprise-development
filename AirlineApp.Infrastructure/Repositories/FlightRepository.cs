@@ -44,18 +44,7 @@ public class FlightRepository(AppDbContext context) : IFlightRepository
     /// </summary>
     public async Task UpdateAsync(Flight flight)
     {
-        var existing = await context.Flights.FindAsync(flight.Id)
-            ?? throw new KeyNotFoundException($"Flight with Id {flight.Id} not found.");
-
-        existing.Code = flight.Code;
-        existing.Departure = flight.Departure;
-        existing.Arrival = flight.Arrival;
-        existing.DepartureDateTime = flight.DepartureDateTime;
-        existing.ArrivalDateTime = flight.ArrivalDateTime;
-        existing.Duration = flight.Duration;
-        existing.AircraftModel = flight.AircraftModel;
-
-        context.Flights.Update(existing);
+        context.Flights.Update(flight);
         await context.SaveChangesAsync();
     }
 

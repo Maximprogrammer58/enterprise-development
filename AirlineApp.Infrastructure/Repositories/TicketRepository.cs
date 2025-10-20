@@ -47,15 +47,7 @@ public class TicketRepository(AppDbContext context) : ITicketRepository
     /// </summary>
     public async Task UpdateAsync(Ticket ticket)
     {
-        var existing = await context.Tickets.FindAsync(ticket.Id)
-            ?? throw new KeyNotFoundException($"Ticket with Id {ticket.Id} not found.");
-        existing.Flight = ticket.Flight;
-        existing.Passenger = ticket.Passenger;
-        existing.SeatNumber = ticket.SeatNumber;
-        existing.HasHandLuggage = ticket.HasHandLuggage;
-        existing.BaggageWeight = ticket.BaggageWeight;
-
-        context.Tickets.Update(existing);
+        context.Tickets.Update(ticket);
         await context.SaveChangesAsync();
     }
 
@@ -64,8 +56,8 @@ public class TicketRepository(AppDbContext context) : ITicketRepository
     /// </summary>
     public async Task DeleteAsync(int id)
     {
-        var entity = await context.Tickets.FindAsync(id)
-            ?? throw new KeyNotFoundException($"Ticket with Id {id} not found.");
+        var entity = await context.Tickets.FindAsync(id);
+        if (entity == null) return;
 
         context.Tickets.Remove(entity);
         await context.SaveChangesAsync();

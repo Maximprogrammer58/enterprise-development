@@ -43,14 +43,7 @@ public class PassengerRepository(AppDbContext context) : IPassengerRepository
     /// </summary>
     public async Task UpdateAsync(Passenger passenger)
     {
-        var existing = await context.Passengers.FindAsync(passenger.Id)
-            ?? throw new KeyNotFoundException($"Passenger with Id {passenger.Id} not found.");
-
-        existing.FullName = passenger.FullName;
-        existing.PassportNumber = passenger.PassportNumber;
-        existing.BirthDate = passenger.BirthDate;
-
-        context.Passengers.Update(existing);
+        context.Passengers.Update(passenger);
         await context.SaveChangesAsync();
     }
 

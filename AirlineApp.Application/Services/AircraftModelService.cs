@@ -28,11 +28,9 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     }
 
     /// <summary>Creates a new aircraft model.</summary>
-    public async Task<(bool Success, AircraftModelGetDto? Result, string? Error)> CreateAsync(AircraftModelEditDto dto)
+    public async Task<AircraftModelGetDto> CreateAsync(AircraftModelEditDto dto)
     {
         var family = await familyRepository.GetByIdAsync(dto.FamilyId);
-        if (family == null) return (false, null, $"AircraftFamily with Id {dto.FamilyId} not found");
-
         var model = new AircraftModel
         {
             Name = dto.Name,
@@ -41,19 +39,14 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
             CargoCapacity = dto.CargoCapacity,
             Family = family
         };
-
         await modelRepository.AddAsync(model);
-        return (true, mapper.Map<AircraftModelGetDto>(model), null);
+        return mapper.Map<AircraftModelGetDto>(model);
     }
 
     /// <summary>Updates an existing aircraft model.</summary>
-    public async Task<(bool Success, string? Error)> UpdateAsync(int id, AircraftModelEditDto dto)
+    public async Task UpdateAsync(int id, AircraftModelEditDto dto)
     {
-        if (!await modelRepository.ExistsByIdAsync(id)) return (false, "Model not found");
-
         var family = await familyRepository.GetByIdAsync(dto.FamilyId);
-        if (family == null) return (false, $"AircraftFamily with Id {dto.FamilyId} not found");
-
         var model = new AircraftModel
         {
             Id = id,
@@ -63,22 +56,16 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
             CargoCapacity = dto.CargoCapacity,
             Family = family
         };
-
         await modelRepository.UpdateAsync(model);
-        return (true, null);
     }
 
     /// <summary>Deletes an aircraft model.</summary>
-    public async Task<(bool Success, string? Error)> DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
-        if (!await modelRepository.ExistsByIdAsync(id))
-            return (false, "AircraftModel not found");
-
         var flights = await flightRepository.GetAllAsync();
         if (flights.Any(f => f.AircraftModel.Id == id))
-            return (false, "Cannot delete AircraftModel: there are existing Flights linked to it.");
+            throw new InvalidOperationException("Cannot delete AircraftModel: there are existing Flights linked to it.");
 
         await modelRepository.DeleteAsync(id);
-        return (true, null);
     }
 }

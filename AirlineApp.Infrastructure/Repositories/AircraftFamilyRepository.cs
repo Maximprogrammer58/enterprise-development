@@ -43,13 +43,7 @@ public class AircraftFamilyRepository(AppDbContext context) : IAircraftFamilyRep
     /// </summary>
     public async Task UpdateAsync(AircraftFamily family)
     {
-        var existing = await context.AircraftFamilies.FindAsync(family.Id)
-            ?? throw new KeyNotFoundException($"Family with Id {family.Id} not found.");
-
-        existing.Name = family.Name;
-        existing.Manufacturer = family.Manufacturer;
-
-        context.AircraftFamilies.Update(existing);
+        context.AircraftFamilies.Update(family);
         await context.SaveChangesAsync();
     }
 

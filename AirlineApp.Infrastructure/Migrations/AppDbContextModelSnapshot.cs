@@ -42,6 +42,9 @@ namespace AirlineApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name", "Manufacturer")
+                        .IsUnique();
+
                     b.ToTable("AircraftFamilies");
                 });
 
@@ -116,6 +119,9 @@ namespace AirlineApp.Infrastructure.Migrations
 
                     b.HasIndex("AircraftModelId");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Flights");
                 });
 
@@ -141,6 +147,9 @@ namespace AirlineApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PassportNumber")
+                        .IsUnique();
 
                     b.ToTable("Passengers");
                 });

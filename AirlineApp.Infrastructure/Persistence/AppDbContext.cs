@@ -25,6 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.Id).ValueGeneratedOnAdd();
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.Property(x => x.Manufacturer).IsRequired().HasMaxLength(128);
+            b.HasIndex(x => new { x.Name, x.Manufacturer }).IsUnique();
         });
 
         modelBuilder.Entity<AircraftModel>(b =>
@@ -53,6 +54,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.DepartureDateTime);
             b.Property(x => x.ArrivalDateTime);
 
+            b.HasIndex(x => x.Code).IsUnique();
+
             b.HasOne(x => x.AircraftModel)
                 .WithMany()
                 .HasForeignKey("AircraftModelId")
@@ -65,6 +68,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.Id).ValueGeneratedOnAdd();
             b.Property(x => x.PassportNumber).IsRequired().HasMaxLength(32);
             b.Property(x => x.FullName).IsRequired().HasMaxLength(128);
+            b.HasIndex(x => x.PassportNumber).IsUnique();
         });
 
         modelBuilder.Entity<Ticket>(b =>

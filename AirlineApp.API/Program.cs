@@ -1,10 +1,10 @@
+using AirlineApp.API.Middlewares;
 using AirlineApp.Application.Mappers;
 using AirlineApp.Application.Services;
 using AirlineApp.Domain.Interfaces;
 using AirlineApp.Infrastructure.Persistence;
 using AirlineApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,4 +59,5 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.UseGlobalExceptionHandling();
 app.Run();

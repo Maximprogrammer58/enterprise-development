@@ -27,10 +27,10 @@ public class FlightService(IFlightRepository flightRepository,
     }
 
     /// <summary>Creates a new flight.</summary>
-    public async Task<(bool Success, FlightGetDto? Result, string? Error)> CreateAsync(FlightEditDto dto)
+    public async Task<FlightGetDto> CreateAsync(FlightEditDto dto)
     {
-        var model = await modelRepository.GetByIdAsync(dto.AircraftModelId);
-        if (model == null) return (false, null, $"AircraftModel with Id {dto.AircraftModelId} not found");
+        var model = await modelRepository.GetByIdAsync(dto.AircraftModelId)
+            ?? throw new KeyNotFoundException($"AircraftModel with Id {dto.AircraftModelId} not found");
 
         var flight = new Flight
         {
@@ -44,16 +44,14 @@ public class FlightService(IFlightRepository flightRepository,
         };
 
         await flightRepository.AddAsync(flight);
-        return (true, mapper.Map<FlightGetDto>(flight), null);
+        return mapper.Map<FlightGetDto>(flight);
     }
 
     /// <summary>Updates an existing flight.</summary>
-    public async Task<(bool Success, string? Error)> UpdateAsync(int id, FlightEditDto dto)
+    public async Task UpdateAsync(int id, FlightEditDto dto)
     {
-        if (!await flightRepository.ExistsByIdAsync(id)) return (false, "Flight not found");
-
-        var model = await modelRepository.GetByIdAsync(dto.AircraftModelId);
-        if (model == null) return (false, $"AircraftModel with Id {dto.AircraftModelId} not found");
+        var model = await modelRepository.GetByIdAsync(dto.AircraftModelId)
+            ?? throw new KeyNotFoundException($"AircraftModel with Id {dto.AircraftModelId} not found");
 
         var flight = new Flight
         {
@@ -68,14 +66,9 @@ public class FlightService(IFlightRepository flightRepository,
         };
 
         await flightRepository.UpdateAsync(flight);
-        return (true, null);
     }
 
     /// <summary>Deletes a flight.</summary>
-    public async Task<bool> DeleteAsync(int id)
-    {
-        if (!await flightRepository.ExistsByIdAsync(id)) return false;
-        await flightRepository.DeleteAsync(id);
-        return true;
-    }
+    public async Task DeleteAsync(int id) =>
+         await flightRepository.DeleteAsync(id);
 }
