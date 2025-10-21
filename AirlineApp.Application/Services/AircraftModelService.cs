@@ -30,7 +30,9 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     /// <summary>Creates a new aircraft model.</summary>
     public async Task<AircraftModelGetDto> CreateAsync(AircraftModelEditDto dto)
     {
-        var family = await familyRepository.GetByIdAsync(dto.FamilyId);
+        var family = await familyRepository.GetByIdAsync(dto.FamilyId)
+             ?? throw new KeyNotFoundException($"AircraftFamily with ID {dto.FamilyId} not found.");
+
         var model = new AircraftModel
         {
             Name = dto.Name,
@@ -46,7 +48,9 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     /// <summary>Updates an existing aircraft model.</summary>
     public async Task UpdateAsync(int id, AircraftModelEditDto dto)
     {
-        var family = await familyRepository.GetByIdAsync(dto.FamilyId);
+        var family = await familyRepository.GetByIdAsync(dto.FamilyId)
+             ?? throw new KeyNotFoundException($"AircraftFamily with ID {dto.FamilyId} not found.");
+
         var model = new AircraftModel
         {
             Id = id,

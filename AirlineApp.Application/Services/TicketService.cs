@@ -30,13 +30,16 @@ public class TicketService(ITicketRepository ticketRepository,
     /// <summary>Creates a new ticket.</summary>
     public async Task<TicketGetDto> CreateAsync(TicketEditDto dto)
     {
-        var flight = await flightRepository.GetByIdAsync(dto.FlightId);
-        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
+        var flight = await flightRepository.GetByIdAsync(dto.FlightId)
+                 ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
+
+        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
+                        ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
         {
-            Flight = flight!,
-            Passenger = passenger!,
+            Flight = flight,
+            Passenger = passenger,
             SeatNumber = dto.SeatNumber,
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight
@@ -49,14 +52,17 @@ public class TicketService(ITicketRepository ticketRepository,
     /// <summary>Updates an existing ticket.</summary>
     public async Task UpdateAsync(int id, TicketEditDto dto)
     {
-        var flight = await flightRepository.GetByIdAsync(dto.FlightId);
-        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId);
+        var flight = await flightRepository.GetByIdAsync(dto.FlightId)
+                  ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
+
+        var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
+                        ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
         {
             Id = id,
-            Flight = flight!,
-            Passenger = passenger!,
+            Flight = flight,
+            Passenger = passenger,
             SeatNumber = dto.SeatNumber,
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight

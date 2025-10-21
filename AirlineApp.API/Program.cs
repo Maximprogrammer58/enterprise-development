@@ -53,7 +53,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     context.Database.Migrate();
     var seeder = new DbSeederForDb(context);
-    await seeder.SeedAsync();
+    await seeder.SeedAsync(forceReset: false);
 }
 
 if (app.Environment.IsDevelopment())

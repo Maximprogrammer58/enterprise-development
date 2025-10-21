@@ -3,20 +3,38 @@
 namespace AirlineApp.Infrastructure.Persistence;
 
 /// <summary>
-/// Provides methods to seed the database with initial data for testing or development.
+/// Seeds the database with initial demo data.
+/// Can optionally force reset all data.
 /// </summary>
 public class DbSeederForDb(AppDbContext context)
 {
-    public async Task SeedAsync()
+    /// <summary>
+    /// Seeds demo data into the database.
+    /// </summary>
+    /// <param name="forceReset">If true, clears existing data before seeding.</param>
+    public async Task SeedAsync(bool forceReset = false)
     {
-        var seed = new DataSeed();
+        if (forceReset)
+        {
+            context.Tickets.RemoveRange(context.Tickets);
+            context.Flights.RemoveRange(context.Flights);
+            context.Passengers.RemoveRange(context.Passengers);
+            context.AircraftModels.RemoveRange(context.AircraftModels);
+            context.AircraftFamilies.RemoveRange(context.AircraftFamilies);
+            await context.SaveChangesAsync();
+        }
 
-        context.Tickets.RemoveRange(context.Tickets);
-        context.Flights.RemoveRange(context.Flights);
-        context.Passengers.RemoveRange(context.Passengers);
-        context.AircraftModels.RemoveRange(context.AircraftModels);
-        context.AircraftFamilies.RemoveRange(context.AircraftFamilies);
-        await context.SaveChangesAsync();
+        if (!forceReset && (
+            context.AircraftFamilies.Any() ||
+            context.AircraftModels.Any() ||
+            context.Passengers.Any() ||
+            context.Flights.Any() ||
+            context.Tickets.Any()))
+        {
+            return;
+        }
+
+        var seed = new DataSeed();
 
         await context.AircraftFamilies.AddRangeAsync(seed.AircraftFamilies);
         await context.SaveChangesAsync();
