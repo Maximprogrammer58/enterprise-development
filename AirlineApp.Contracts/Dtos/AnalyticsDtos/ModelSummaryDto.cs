@@ -1,4 +1,4 @@
-﻿namespace AirlineApp.Application.Dtos.AnalyticsDtos;
+﻿namespace AirlineApp.Contracts.Dtos.AnalyticsDtos;
 
 /// <summary>
 /// DTO representing summary information of a model's flights in a period.

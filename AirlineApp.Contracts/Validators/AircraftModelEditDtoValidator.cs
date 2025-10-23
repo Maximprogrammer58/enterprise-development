@@ -1,7 +1,7 @@
-﻿using AirlineApp.Application.Dtos.AircraftModelDtos;
+﻿using AirlineApp.Contracts.Dtos.AircraftModelDtos;
 using FluentValidation;
 
-namespace AirlineApp.Application.Validators;
+namespace AirlineApp.Contracts.Validators;
 
 /// <summary>
 /// Validator for AircraftModelEditDto.

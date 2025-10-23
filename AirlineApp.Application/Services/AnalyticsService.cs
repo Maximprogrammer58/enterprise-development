@@ -1,5 +1,4 @@
-﻿using AirlineApp.Application.Dtos.AnalyticsDtos;
-using AirlineApp.Domain.Entities;
+﻿using AirlineApp.Contracts.Dtos.AnalyticsDtos;
 using AirlineApp.Domain.Interfaces;
 
 namespace AirlineApp.Application.Services;

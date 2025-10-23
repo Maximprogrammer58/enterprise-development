@@ -1,4 +1,5 @@
-﻿using AirlineApp.Application.Dtos.PassengerDtos;
+﻿using AirlineApp.Contracts.Dtos.PassengerDtos;
+using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
@@ -8,7 +9,7 @@ namespace AirlineApp.Application.Services;
 /// <summary>
 /// Service for managing passengers.
 /// </summary>
-public class PassengerService(IPassengerRepository repository, IMapper mapper)
+public class PassengerService(IPassengerRepository repository, IMapper mapper) : ICrudService<PassengerGetDto, PassengerEditDto>
 {
     /// <summary>Gets all passengers.</summary>
     public async Task<IEnumerable<PassengerGetDto>> GetAllAsync()
@@ -35,6 +36,9 @@ public class PassengerService(IPassengerRepository repository, IMapper mapper)
     /// <summary>Updates an existing passenger.</summary>
     public async Task UpdateAsync(int id, PassengerEditDto dto)
     {
+        if (!await repository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Passenger with Id {id} not found");
+
         var passenger = mapper.Map<Passenger>(dto);
         passenger.Id = id;
         await repository.UpdateAsync(passenger);
@@ -42,6 +46,11 @@ public class PassengerService(IPassengerRepository repository, IMapper mapper)
 
 
     /// <summary>Deletes a passenger.</summary>
-    public async Task DeleteAsync(int id) =>
+    public async Task DeleteAsync(int id)
+    {
+        if (!await repository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Passenger with Id {id} not found");
+
         await repository.DeleteAsync(id);
+    }
 }

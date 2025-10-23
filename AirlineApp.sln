@@ -11,11 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Application", "AirlineApp.Application\AirlineApp.Application.csproj", "{BB16CD44-BBB3-43C1-8BD1-7980DECCE1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.API", "AirlineApp.API\AirlineApp.API.csproj", "{FA3D979D-0112-439D-826E-B153455DC69D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Api", "AirlineApp.API\AirlineApp.Api.csproj", "{FA3D979D-0112-439D-826E-B153455DC69D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.AppHost", "AirlineApp.AppHost\AirlineApp.AppHost.csproj", "{6F4F5D05-4447-463C-821D-99F1C3B74F9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.ServiceDefaults", "AirlineApp.ServiceDefaults\AirlineApp.ServiceDefaults.csproj", "{52AB634A-430A-4F72-AEEE-EE251583448C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Contracts", "AirlineApp.Contracts\AirlineApp.Contracts.csproj", "{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,18 @@ Global
 		{52AB634A-430A-4F72-AEEE-EE251583448C}.Release|x64.Build.0 = Release|Any CPU
 		{52AB634A-430A-4F72-AEEE-EE251583448C}.Release|x86.ActiveCfg = Release|Any CPU
 		{52AB634A-430A-4F72-AEEE-EE251583448C}.Release|x86.Build.0 = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|x64.Build.0 = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Debug|x86.Build.0 = Debug|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|x64.Build.0 = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA8F367D-26FE-4DB7-86FE-F94E4643AC16}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

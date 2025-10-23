@@ -1,4 +1,5 @@
-﻿using AirlineApp.Application.Dtos.FlightDtos;
+﻿using AirlineApp.Contracts.Dtos.FlightDtos;
+using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
@@ -10,7 +11,7 @@ namespace AirlineApp.Application.Services;
 /// </summary>
 public class FlightService(IFlightRepository flightRepository,
         IAircraftModelRepository modelRepository,
-        IMapper mapper)
+        IMapper mapper) : ICrudService<FlightGetDto, FlightEditDto>
 {
     /// <summary>Gets all flights.</summary>
     public async Task<IEnumerable<FlightGetDto>> GetAllAsync()
@@ -30,7 +31,7 @@ public class FlightService(IFlightRepository flightRepository,
     public async Task<FlightGetDto> CreateAsync(FlightEditDto dto)
     {
         var model = await modelRepository.GetByIdAsync(dto.AircraftModelId)
-            ?? throw new KeyNotFoundException($"AircraftModel with Id {dto.AircraftModelId} not found");
+            ?? throw new InvalidOperationException($"AircraftModel with Id {dto.AircraftModelId} not found");
 
         var flight = new Flight
         {
@@ -50,6 +51,9 @@ public class FlightService(IFlightRepository flightRepository,
     /// <summary>Updates an existing flight.</summary>
     public async Task UpdateAsync(int id, FlightEditDto dto)
     {
+        if (!await flightRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Flight with Id {id} not found");
+
         var model = await modelRepository.GetByIdAsync(dto.AircraftModelId)
             ?? throw new KeyNotFoundException($"AircraftModel with Id {dto.AircraftModelId} not found");
 
@@ -69,6 +73,11 @@ public class FlightService(IFlightRepository flightRepository,
     }
 
     /// <summary>Deletes a flight.</summary>
-    public async Task DeleteAsync(int id) =>
-         await flightRepository.DeleteAsync(id);
+    public async Task DeleteAsync(int id)
+    {
+        if (!await flightRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Flight with Id {id} not found");
+
+        await flightRepository.DeleteAsync(id);
+    }
 }

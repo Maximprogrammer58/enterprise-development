@@ -1,7 +1,7 @@
-﻿using AirlineApp.Application.Dtos.PassengerDtos;
+﻿using AirlineApp.Contracts.Dtos.PassengerDtos;
 using FluentValidation;
 
-namespace AirlineApp.Application.Validators;
+namespace AirlineApp.Contracts.Validators;
 
 /// <summary>
 /// Validator for PassengerEditDto.

@@ -1,5 +1,6 @@
-﻿using AirlineApp.Application.Dtos.FlightDtos;
-using AirlineApp.Application.Services;
+﻿using AirlineApp.Application.Services;
+using AirlineApp.Contracts.Dtos.FlightDtos;
+using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,7 +11,7 @@ namespace AirlineApp.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/flights")]
-public class FlightController(FlightService service) : ControllerBase
+public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service) : ControllerBase
 {
     /// <summary>
     /// Retrieves all flights.

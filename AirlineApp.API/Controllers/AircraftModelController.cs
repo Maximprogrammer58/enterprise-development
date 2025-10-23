@@ -1,5 +1,6 @@
-﻿using AirlineApp.Application.Dtos.AircraftModelDtos;
-using AirlineApp.Application.Services;
+﻿using AirlineApp.Application.Services;
+using AirlineApp.Contracts.Dtos.AircraftModelDtos;
+using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,7 +11,7 @@ namespace AirlineApp.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/aircraft-models")]
-public class AircraftModelController(AircraftModelService service) : ControllerBase
+public class AircraftModelController(ICrudService<AircraftModelGetDto, AircraftModelEditDto> service) : ControllerBase
 {
     /// <summary>
     /// Retrieves all aircraft models.

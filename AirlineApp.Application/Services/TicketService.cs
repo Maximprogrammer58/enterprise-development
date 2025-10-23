@@ -1,4 +1,5 @@
-﻿using AirlineApp.Application.Dtos.TicketDtos;
+﻿using AirlineApp.Contracts.Dtos.TicketDtos;
+using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
@@ -11,7 +12,7 @@ namespace AirlineApp.Application.Services;
 public class TicketService(ITicketRepository ticketRepository,
         IFlightRepository flightRepository,
         IPassengerRepository passengerRepository,
-        IMapper mapper)
+        IMapper mapper) : ICrudService<TicketGetDto, TicketEditDto>
 {
     /// <summary>Gets all tickets.</summary>
     public async Task<IEnumerable<TicketGetDto>> GetAllAsync()
@@ -31,10 +32,10 @@ public class TicketService(ITicketRepository ticketRepository,
     public async Task<TicketGetDto> CreateAsync(TicketEditDto dto)
     {
         var flight = await flightRepository.GetByIdAsync(dto.FlightId)
-                 ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
+                 ?? throw new InvalidOperationException($"Flight with Id {dto.FlightId} not found");
 
         var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
-                        ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
+                        ?? throw new InvalidOperationException($"Passenger with Id {dto.PassengerId} not found");
 
         var ticket = new Ticket
         {
@@ -52,6 +53,9 @@ public class TicketService(ITicketRepository ticketRepository,
     /// <summary>Updates an existing ticket.</summary>
     public async Task UpdateAsync(int id, TicketEditDto dto)
     {
+        if (!await ticketRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Ticket with Id {id} not found");
+
         var flight = await flightRepository.GetByIdAsync(dto.FlightId)
                   ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
 
@@ -72,6 +76,11 @@ public class TicketService(ITicketRepository ticketRepository,
     }
 
     /// <summary>Deletes a ticket.</summary>
-    public async Task DeleteAsync(int id) =>
-         await ticketRepository.DeleteAsync(id);
+    public async Task DeleteAsync(int id)
+    {
+        if (!await ticketRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Ticket with Id {id} not found");
+
+        await ticketRepository.DeleteAsync(id);
+    }
 }

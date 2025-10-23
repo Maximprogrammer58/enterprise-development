@@ -1,15 +1,10 @@
-﻿namespace AirlineApp.Application.Dtos.PassengerDtos;
+﻿namespace AirlineApp.Contracts.Dtos.PassengerDtos;
 
 /// <summary>
-/// DTO for retrieving Passenger information
+/// DTO for creating or updating Passenger
 /// </summary>
-public class PassengerGetDto
+public class PassengerEditDto
 {
-    /// <summary>
-    /// Unique identifier of the passenger.
-    /// </summary>
-    public int Id { get; set; }
-
     /// <summary>
     /// Passport number of the passenger.
     /// </summary>

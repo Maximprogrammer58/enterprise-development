@@ -1,7 +1,13 @@
-using AirlineApp.API.Middlewares;
+using AirlineApp.Api.Middlewares.Extensions;
 using AirlineApp.Application.Mappers;
 using AirlineApp.Application.Services;
-using AirlineApp.Application.Validators;
+using AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
+using AirlineApp.Contracts.Dtos.AircraftModelDtos;
+using AirlineApp.Contracts.Dtos.FlightDtos;
+using AirlineApp.Contracts.Dtos.PassengerDtos;
+using AirlineApp.Contracts.Dtos.TicketDtos;
+using AirlineApp.Contracts.Interfaces;
+using AirlineApp.Contracts.Validators;
 using AirlineApp.Domain.Interfaces;
 using AirlineApp.Infrastructure.Persistence;
 using AirlineApp.Infrastructure.Repositories;
@@ -30,14 +36,19 @@ builder.Services.AddAutoMapper(typeof(AppMappingProfile).Assembly);
 builder.Services.AddTransient<DbSeederForDb>();
 
 builder.Services.AddScoped<AnalyticsService>();
-builder.Services.AddScoped<AircraftFamilyService>();
-builder.Services.AddScoped<AircraftModelService>();
-builder.Services.AddScoped<FlightService>();
-builder.Services.AddScoped<PassengerService>();
-builder.Services.AddScoped<TicketService>();
+builder.Services.AddScoped<ICrudService<AircraftFamilyGetDto, AircraftFamilyEditDto>, AircraftFamilyService>();
+builder.Services.AddScoped<ICrudService<AircraftModelGetDto, AircraftModelEditDto>, AircraftModelService>();
+builder.Services.AddScoped<ICrudService<FlightGetDto, FlightEditDto>, FlightService>();
+builder.Services.AddScoped<ICrudService<PassengerGetDto, PassengerEditDto>, PassengerService>();
+builder.Services.AddScoped<ICrudService<TicketGetDto, TicketEditDto>, TicketService>();
+
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<AircraftFamilyEditDtoValidator>();
+builder.Services.AddTransient<IValidator<AircraftFamilyEditDto>, AircraftFamilyEditDtoValidator>();
+builder.Services.AddTransient<IValidator<AircraftModelEditDto>, AircraftModelEditDtoValidator>();
+builder.Services.AddTransient<IValidator<FlightEditDto>, FlightEditDtoValidator>();
+builder.Services.AddTransient<IValidator<PassengerEditDto>, PassengerEditDtoValidator>();
+builder.Services.AddTransient<IValidator<TicketEditDto>, TicketEditDtoValidator>();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -51,7 +62,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.Migrate();
+
+    await context.Database.MigrateAsync();
+
     var seeder = new DbSeederForDb(context);
     await seeder.SeedAsync(forceReset: false);
 }
@@ -62,8 +75,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseGlobalExceptionHandling();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
-app.UseGlobalExceptionHandling();
 app.Run();

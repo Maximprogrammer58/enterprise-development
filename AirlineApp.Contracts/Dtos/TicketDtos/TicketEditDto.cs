@@ -1,4 +1,4 @@
-﻿namespace AirlineApp.Application.Dtos.TicketDtos;
+﻿namespace AirlineApp.Contracts.Dtos.TicketDtos;
 
 /// <summary>
 /// DTO for creating or updating Ticket

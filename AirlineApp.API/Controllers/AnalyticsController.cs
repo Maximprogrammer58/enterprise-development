@@ -1,4 +1,4 @@
-﻿using AirlineApp.Application.Dtos.AnalyticsDtos;
+﻿using AirlineApp.Contracts.Dtos.AnalyticsDtos;
 using AirlineApp.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 

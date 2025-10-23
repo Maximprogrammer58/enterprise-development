@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using AirlineApp.Domain.Entities;
-using AirlineApp.Application.Dtos.AircraftFamilyDtos;
-using AirlineApp.Application.Dtos.AircraftModelDtos;
-using AirlineApp.Application.Dtos.FlightDtos;
-using AirlineApp.Application.Dtos.PassengerDtos;
-using AirlineApp.Application.Dtos.TicketDtos;
-using AirlineApp.Application.Dtos.AnalyticsDtos;
+using AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
+using AirlineApp.Contracts.Dtos.AircraftModelDtos;
+using AirlineApp.Contracts.Dtos.FlightDtos;
+using AirlineApp.Contracts.Dtos.PassengerDtos;
+using AirlineApp.Contracts.Dtos.TicketDtos;
 
 namespace AirlineApp.Application.Mappers;
 

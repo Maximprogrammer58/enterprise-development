@@ -1,4 +1,5 @@
-﻿using AirlineApp.Application.Dtos.AircraftModelDtos;
+﻿using AirlineApp.Contracts.Dtos.AircraftModelDtos;
+using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
@@ -11,7 +12,7 @@ namespace AirlineApp.Application.Services;
 public class AircraftModelService(IAircraftModelRepository modelRepository,
         IAircraftFamilyRepository familyRepository,
         IFlightRepository flightRepository,
-        IMapper mapper)
+        IMapper mapper) : ICrudService<AircraftModelGetDto, AircraftModelEditDto>
 {
     /// <summary>Gets all aircraft models.</summary>
     public async Task<IEnumerable<AircraftModelGetDto>> GetAllAsync()
@@ -31,7 +32,7 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     public async Task<AircraftModelGetDto> CreateAsync(AircraftModelEditDto dto)
     {
         var family = await familyRepository.GetByIdAsync(dto.FamilyId)
-             ?? throw new KeyNotFoundException($"AircraftFamily with ID {dto.FamilyId} not found.");
+             ?? throw new InvalidOperationException($"AircraftFamily with ID {dto.FamilyId} not found.");
 
         var model = new AircraftModel
         {
@@ -48,6 +49,9 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     /// <summary>Updates an existing aircraft model.</summary>
     public async Task UpdateAsync(int id, AircraftModelEditDto dto)
     {
+        if (!await modelRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"AircraftModel with Id {id} not found.");
+
         var family = await familyRepository.GetByIdAsync(dto.FamilyId)
              ?? throw new KeyNotFoundException($"AircraftFamily with ID {dto.FamilyId} not found.");
 
@@ -66,6 +70,9 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     /// <summary>Deletes an aircraft model.</summary>
     public async Task DeleteAsync(int id)
     {
+        if (!await modelRepository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"AircraftModel with Id {id} not found.");
+
         var flights = await flightRepository.GetAllAsync();
         if (flights.Any(f => f.AircraftModel.Id == id))
             throw new InvalidOperationException("Cannot delete AircraftModel: there are existing Flights linked to it.");

@@ -1,4 +1,4 @@
-﻿namespace AirlineApp.Application.Dtos.AnalyticsDtos;
+﻿namespace AirlineApp.Contracts.Dtos.AnalyticsDtos;
 
 /// <summary>
 /// DTO representing a passenger with zero baggage on a flight.

@@ -1,10 +1,15 @@
-﻿namespace AirlineApp.Application.Dtos.AircraftFamilyDtos;
+﻿namespace AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
 
 /// <summary>
-/// DTO for creating or updating AircraftFamily
+/// DTO for retrieving AircraftFamily information
 /// </summary>
-public class AircraftFamilyEditDto
+public class AircraftFamilyGetDto
 {
+    /// <summary>
+    /// Unique identifier of the aircraft family.
+    /// </summary>
+    public int Id { get; set; }
+
     /// <summary>
     /// Name of the aircraft family.
     /// </summary>

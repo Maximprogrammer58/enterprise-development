@@ -1,10 +1,15 @@
-﻿namespace AirlineApp.Application.Dtos.FlightDtos;
+﻿namespace AirlineApp.Contracts.Dtos.FlightDtos;
 
 /// <summary>
-/// DTO for creating or updating Flight
+/// DTO for retrieving Fligth information
 /// </summary>
-public class FlightEditDto
+public class FlightGetDto
 {
+    /// <summary>
+    /// Unique identifier of the flight.
+    /// </summary>
+    public int Id { get; set; }
+
     /// <summary>
     /// Flight code
     /// </summary>
@@ -39,4 +44,9 @@ public class FlightEditDto
     /// Id of the aircraft model used for this flight.
     /// </summary>
     public required int AircraftModelId { get; set; }
+
+    /// <summary>
+    /// Name of the aircraft model used for this flight.
+    /// </summary>
+    public required string AircraftModelName { get; set; }
 }

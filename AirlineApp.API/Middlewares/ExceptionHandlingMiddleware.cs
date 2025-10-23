@@ -30,7 +30,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         catch (InvalidOperationException invOpEx)
         {
             logger.LogWarning(invOpEx, "Invalid operation attempted");
-            context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsJsonAsync(new { error = invOpEx.Message });
         }
         catch (DbUpdateException dbEx)
@@ -48,13 +48,5 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
                 error = "An unexpected error occurred."
             });
         }
-    }
-}
-
-public static class ExceptionHandlingMiddlewareExtensions
-{
-    public static IApplicationBuilder UseGlobalExceptionHandling(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<ExceptionHandlingMiddleware>();
     }
 }

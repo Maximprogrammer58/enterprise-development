@@ -1,4 +1,5 @@
-﻿using AirlineApp.Application.Dtos.AircraftFamilyDtos;
+﻿using AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
+using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
@@ -10,7 +11,7 @@ namespace AirlineApp.Application.Services;
 /// </summary>
 public class AircraftFamilyService(IAircraftFamilyRepository repository,
         IAircraftModelRepository modelRepository,
-        IMapper mapper)
+        IMapper mapper) : ICrudService<AircraftFamilyGetDto, AircraftFamilyEditDto>
 {
     /// <summary>Gets all aircraft families.</summary>
     public async Task<IEnumerable<AircraftFamilyGetDto>> GetAllAsync()
@@ -37,6 +38,9 @@ public class AircraftFamilyService(IAircraftFamilyRepository repository,
     /// <summary>Updates an existing aircraft family.</summary>
     public async Task UpdateAsync(int id, AircraftFamilyEditDto dto)
     {
+        if (!await repository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Aircraft family with Id {id} not found.");
+
         var entity = mapper.Map<AircraftFamily>(dto);
         entity.Id = id;
         await repository.UpdateAsync(entity);
@@ -45,6 +49,9 @@ public class AircraftFamilyService(IAircraftFamilyRepository repository,
     /// <summary>Deletes an aircraft family.</summary>
     public async Task DeleteAsync(int id)
     {
+        if (!await repository.ExistsByIdAsync(id))
+            throw new InvalidOperationException($"Aircraft family with Id {id} not found.");
+
         var models = await modelRepository.GetAllAsync();
         if (models.Any(m => m.Family.Id == id))
             throw new InvalidOperationException("Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");

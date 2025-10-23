@@ -1,5 +1,6 @@
-﻿using AirlineApp.Application.Dtos.AircraftFamilyDtos;
-using AirlineApp.Application.Services;
+﻿using AirlineApp.Application.Services;
+using AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
+using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,7 +11,7 @@ namespace AirlineApp.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/aircraft-families")]
-public class AircraftFamilyController(AircraftFamilyService service) : ControllerBase
+public class AircraftFamilyController(ICrudService<AircraftFamilyGetDto, AircraftFamilyEditDto> service) : ControllerBase
 {
     /// <summary>
     /// Retrieves all aircraft families.

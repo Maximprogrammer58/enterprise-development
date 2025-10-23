@@ -1,7 +1,7 @@
-﻿using AirlineApp.Application.Dtos.AircraftFamilyDtos;
+﻿using AirlineApp.Contracts.Dtos.AircraftFamilyDtos;
 using FluentValidation;
 
-namespace AirlineApp.Application.Validators;
+namespace AirlineApp.Contracts.Validators;
 
 /// <summary>
 /// Validator for AircraftFamilyEditDto.

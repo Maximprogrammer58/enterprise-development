@@ -1,5 +1,6 @@
-﻿using AirlineApp.Application.Dtos.PassengerDtos;
-using AirlineApp.Application.Services;
+﻿using AirlineApp.Application.Services;
+using AirlineApp.Contracts.Dtos.PassengerDtos;
+using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,7 +11,7 @@ namespace AirlineApp.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/passengers")]
-public class PassengerController(PassengerService service) : ControllerBase
+public class PassengerController(ICrudService<PassengerGetDto, PassengerEditDto> service) : ControllerBase
 {
     /// <summary>
     /// Retrieves all passengers.

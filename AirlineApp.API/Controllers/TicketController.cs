@@ -1,5 +1,6 @@
-﻿using AirlineApp.Application.Dtos.TicketDtos;
-using AirlineApp.Application.Services;
+﻿using AirlineApp.Application.Services;
+using AirlineApp.Contracts.Dtos.TicketDtos;
+using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineApp.API.Controllers;
@@ -10,7 +11,7 @@ namespace AirlineApp.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/tickets")]
-public class TicketController(TicketService service) : ControllerBase
+public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service) : ControllerBase
 {
     /// <summary>
     /// Retrieves all tickets.
