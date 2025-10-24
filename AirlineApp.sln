@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Application", "AirlineApp.Application\AirlineApp.Application.csproj", "{BB16CD44-BBB3-43C1-8BD1-7980DECCE1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Api", "AirlineApp.API\AirlineApp.Api.csproj", "{FA3D979D-0112-439D-826E-B153455DC69D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.Api", "AirlineApp.Api\AirlineApp.Api.csproj", "{FA3D979D-0112-439D-826E-B153455DC69D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineApp.AppHost", "AirlineApp.AppHost\AirlineApp.AppHost.csproj", "{6F4F5D05-4447-463C-821D-99F1C3B74F9F}"
 EndProject
