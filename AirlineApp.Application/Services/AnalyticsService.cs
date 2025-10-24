@@ -33,6 +33,9 @@ public class AnalyticsService(IFlightRepository flightRepository,
     /// </summary>
     public async Task<List<PassengerWithZeroBaggageDto>> GetPassengersWithZeroBaggageAsync(string flightCode)
     {
+        if (string.IsNullOrWhiteSpace(flightCode))
+            throw new ArgumentException("Flight code is required");
+
         var tickets = await ticketRepository.GetAllAsync();
 
         return tickets
@@ -51,6 +54,12 @@ public class AnalyticsService(IFlightRepository flightRepository,
     /// </summary>
     public async Task<ModelSummaryDto> GetSummaryByModelInPeriodAsync(string modelName, DateTime start, DateTime end)
     {
+        if (string.IsNullOrWhiteSpace(modelName))
+            throw new ArgumentException("Model name is required");
+
+        if (start > end)
+            throw new ArgumentException("Start date cannot be after end date");
+
         var flights = (await flightRepository.GetAllAsync())
             .Where(f => f.AircraftModel.Name == modelName &&
                         f.DepartureDateTime.HasValue && f.ArrivalDateTime.HasValue &&
@@ -75,6 +84,15 @@ public class AnalyticsService(IFlightRepository flightRepository,
     /// </summary>
     public async Task<List<string>> GetFlightsFromToAsync(string departure, string arrival)
     {
+        if (string.IsNullOrWhiteSpace(departure))
+            throw new ArgumentException("Departure location is required");
+
+        if (string.IsNullOrWhiteSpace(arrival))
+            throw new ArgumentException("Arrival location is required");
+
+        if (departure.Equals(arrival, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("Departure and arrival locations cannot be the same");
+
         var flights = await flightRepository.GetAllAsync();
         return flights
             .Where(f => f.Departure == departure && f.Arrival == arrival)
@@ -89,6 +107,7 @@ public class AnalyticsService(IFlightRepository flightRepository,
     public async Task<List<string>> GetFlightsWithMinimalDurationAsync()
     {
         var flights = await flightRepository.GetAllAsync();
+
         var minDuration = flights
             .Where(f => f.Duration.HasValue)
             .Min(f => f.Duration!.Value);

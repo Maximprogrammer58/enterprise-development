@@ -59,4 +59,14 @@ public class FlightRepository(AppDbContext context) : IFlightRepository
         context.Flights.Remove(entity);
         await context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Retrieves an Flight by its ID, including all associated Tickets and AircraftModels.
+    /// </summary>
+    public async Task<Flight?> GetByIdWithTicketsAsync(int id) =>
+    await context.Flights
+                 .Include(f => f.Tickets)
+                 .Include(f => f.AircraftModel)
+                 .FirstOrDefaultAsync(f => f.Id == id);
+
 }

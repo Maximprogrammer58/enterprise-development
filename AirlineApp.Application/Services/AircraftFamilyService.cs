@@ -10,7 +10,6 @@ namespace AirlineApp.Application.Services;
 /// Service for managing aircraft families.
 /// </summary>
 public class AircraftFamilyService(IAircraftFamilyRepository repository,
-        IAircraftModelRepository modelRepository,
         IMapper mapper) : ICrudService<AircraftFamilyGetDto, AircraftFamilyEditDto>
 {
     /// <summary>Gets all aircraft families.</summary>
@@ -49,13 +48,13 @@ public class AircraftFamilyService(IAircraftFamilyRepository repository,
     /// <summary>Deletes an aircraft family.</summary>
     public async Task DeleteAsync(int id)
     {
-        if (!await repository.ExistsByIdAsync(id))
-            throw new InvalidOperationException($"Aircraft family with Id {id} not found.");
+        var family = await repository.GetByIdWithModelsAsync(id)
+                 ?? throw new InvalidOperationException($"Aircraft family with Id {id} not found");
 
-        var models = await modelRepository.GetAllAsync();
-        if (models.Any(m => m.Family.Id == id))
+        if (family.Models.Any())
             throw new InvalidOperationException("Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");
 
-        await repository.DeleteAsync(id);
+        await repository.DeleteAsync(family.Id);
+
     }
 }

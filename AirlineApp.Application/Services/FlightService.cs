@@ -75,8 +75,11 @@ public class FlightService(IFlightRepository flightRepository,
     /// <summary>Deletes a flight.</summary>
     public async Task DeleteAsync(int id)
     {
-        if (!await flightRepository.ExistsByIdAsync(id))
-            throw new InvalidOperationException($"Flight with Id {id} not found");
+        var flight = await flightRepository.GetByIdWithTicketsAsync(id)
+                     ?? throw new InvalidOperationException($"Flight with Id {id} not found");
+
+        if (flight.Tickets.Any())
+            throw new InvalidOperationException("Cannot delete flight with existing tickets.");
 
         await flightRepository.DeleteAsync(id);
     }

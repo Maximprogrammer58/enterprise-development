@@ -4,6 +4,7 @@ using AirlineApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirlineApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251024130611_Fix_TicketDeleteBehavior")]
+    partial class Fix_TicketDeleteBehavior
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,7 +194,7 @@ namespace AirlineApp.Infrastructure.Migrations
             modelBuilder.Entity("AirlineApp.Domain.Entities.AircraftModel", b =>
                 {
                     b.HasOne("AirlineApp.Domain.Entities.AircraftFamily", "Family")
-                        .WithMany("Models")
+                        .WithMany()
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -202,7 +205,7 @@ namespace AirlineApp.Infrastructure.Migrations
             modelBuilder.Entity("AirlineApp.Domain.Entities.Flight", b =>
                 {
                     b.HasOne("AirlineApp.Domain.Entities.AircraftModel", "AircraftModel")
-                        .WithMany("Flights")
+                        .WithMany()
                         .HasForeignKey("AircraftModelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -213,13 +216,13 @@ namespace AirlineApp.Infrastructure.Migrations
             modelBuilder.Entity("AirlineApp.Domain.Entities.Ticket", b =>
                 {
                     b.HasOne("AirlineApp.Domain.Entities.Flight", "Flight")
-                        .WithMany("Tickets")
+                        .WithMany()
                         .HasForeignKey("FlightId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AirlineApp.Domain.Entities.Passenger", "Passenger")
-                        .WithMany("Tickets")
+                        .WithMany()
                         .HasForeignKey("PassengerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -227,26 +230,6 @@ namespace AirlineApp.Infrastructure.Migrations
                     b.Navigation("Flight");
 
                     b.Navigation("Passenger");
-                });
-
-            modelBuilder.Entity("AirlineApp.Domain.Entities.AircraftFamily", b =>
-                {
-                    b.Navigation("Models");
-                });
-
-            modelBuilder.Entity("AirlineApp.Domain.Entities.AircraftModel", b =>
-                {
-                    b.Navigation("Flights");
-                });
-
-            modelBuilder.Entity("AirlineApp.Domain.Entities.Flight", b =>
-                {
-                    b.Navigation("Tickets");
-                });
-
-            modelBuilder.Entity("AirlineApp.Domain.Entities.Passenger", b =>
-                {
-                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

@@ -38,7 +38,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.CargoCapacity).IsRequired();
 
             b.HasOne(x => x.Family)
-                .WithMany()
+                .WithMany(f => f.Models)
                 .HasForeignKey("FamilyId")
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -57,7 +57,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.HasIndex(x => x.Code).IsUnique();
 
             b.HasOne(x => x.AircraftModel)
-                .WithMany()
+                .WithMany(m => m.Flights)
                 .HasForeignKey("AircraftModelId")
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -79,14 +79,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.HasHandLuggage).IsRequired();
 
             b.HasOne(x => x.Flight)
-                .WithMany()
+                .WithMany(f => f.Tickets)
                 .HasForeignKey("FlightId")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             b.HasOne(x => x.Passenger)
-                .WithMany()
+                .WithMany(p => p.Tickets)
                 .HasForeignKey("PassengerId")
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

@@ -9,7 +9,8 @@ namespace AirlineApp.Application.Services;
 /// <summary>
 /// Service for managing passengers.
 /// </summary>
-public class PassengerService(IPassengerRepository repository, IMapper mapper) : ICrudService<PassengerGetDto, PassengerEditDto>
+public class PassengerService(IPassengerRepository repository,
+        IMapper mapper) : ICrudService<PassengerGetDto, PassengerEditDto>
 {
     /// <summary>Gets all passengers.</summary>
     public async Task<IEnumerable<PassengerGetDto>> GetAllAsync()
@@ -48,8 +49,11 @@ public class PassengerService(IPassengerRepository repository, IMapper mapper) :
     /// <summary>Deletes a passenger.</summary>
     public async Task DeleteAsync(int id)
     {
-        if (!await repository.ExistsByIdAsync(id))
-            throw new InvalidOperationException($"Passenger with Id {id} not found");
+        var passenger = await repository.GetByIdWithTicketsAsync(id)
+                        ?? throw new InvalidOperationException($"Passenger with Id {id} not found");
+
+        if (passenger.Tickets.Any())
+            throw new InvalidOperationException("Cannot delete passenger with existing tickets.");
 
         await repository.DeleteAsync(id);
     }

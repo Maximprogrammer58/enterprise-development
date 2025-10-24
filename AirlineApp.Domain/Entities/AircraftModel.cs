@@ -34,4 +34,6 @@ public class AircraftModel
     /// Cargo capacity of the aircraft model.
     /// </summary>
     public required float CargoCapacity { get; set; }
+
+    public ICollection<Flight> Flights { get; set; } = new List<Flight>();
 }

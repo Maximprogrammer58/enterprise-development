@@ -24,4 +24,6 @@ public class Passenger
     /// Birth date of the passenger.
     /// </summary>
     public DateOnly? BirthDate { get; set; }
+
+    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

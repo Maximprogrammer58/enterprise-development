@@ -44,4 +44,6 @@ public class Flight
     /// Aircraft model used for this flight.
     /// </summary>
     public required AircraftModel AircraftModel { get; set; }
+
+    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

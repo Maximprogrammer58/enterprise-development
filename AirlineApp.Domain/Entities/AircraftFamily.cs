@@ -19,4 +19,6 @@ public class AircraftFamily
     /// Manufacturer of the aircraft family.
     /// </summary>
     public required string Manufacturer { get; set; }
+
+    public ICollection<AircraftModel> Models { get; set; } = new List<AircraftModel>();
 }

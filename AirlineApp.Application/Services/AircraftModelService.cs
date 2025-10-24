@@ -11,7 +11,6 @@ namespace AirlineApp.Application.Services;
 /// </summary>
 public class AircraftModelService(IAircraftModelRepository modelRepository,
         IAircraftFamilyRepository familyRepository,
-        IFlightRepository flightRepository,
         IMapper mapper) : ICrudService<AircraftModelGetDto, AircraftModelEditDto>
 {
     /// <summary>Gets all aircraft models.</summary>
@@ -70,13 +69,13 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
     /// <summary>Deletes an aircraft model.</summary>
     public async Task DeleteAsync(int id)
     {
-        if (!await modelRepository.ExistsByIdAsync(id))
-            throw new InvalidOperationException($"AircraftModel with Id {id} not found.");
+        var model = await modelRepository.GetByIdWithFlightsAsync(id)
+                    ?? throw new InvalidOperationException($"AircraftModel with Id {id} not found");
 
-        var flights = await flightRepository.GetAllAsync();
-        if (flights.Any(f => f.AircraftModel.Id == id))
+        if (model.Flights.Any())
             throw new InvalidOperationException("Cannot delete AircraftModel: there are existing Flights linked to it.");
 
         await modelRepository.DeleteAsync(id);
     }
+
 }

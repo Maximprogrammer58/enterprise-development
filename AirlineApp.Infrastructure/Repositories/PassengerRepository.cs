@@ -58,4 +58,13 @@ public class PassengerRepository(AppDbContext context) : IPassengerRepository
         context.Passengers.Remove(entity);
         await context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Retrieves an Passenger by its ID, including all associated Tickets.
+    /// </summary>
+    public async Task<Passenger?> GetByIdWithTicketsAsync(int id) =>
+    await context.Passengers
+                 .Include(p => p.Tickets)
+                 .FirstOrDefaultAsync(p => p.Id == id);
+
 }

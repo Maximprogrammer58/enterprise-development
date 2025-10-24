@@ -58,4 +58,13 @@ public class AircraftFamilyRepository(AppDbContext context) : IAircraftFamilyRep
         context.AircraftFamilies.Remove(entity);
         await context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Retrieves an AircraftFamily by its ID, including all associated AircraftModels.
+    /// </summary>
+    public async Task<AircraftFamily?> GetByIdWithModelsAsync(int id) =>
+    await context.AircraftFamilies
+                 .Include(f => f.Models)
+                 .FirstOrDefaultAsync(f => f.Id == id);
+
 }
