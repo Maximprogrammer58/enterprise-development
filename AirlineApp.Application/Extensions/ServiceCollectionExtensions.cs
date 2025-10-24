@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AirlineApp.Application.Extensions;
 
+/// <summary>
+/// Provides extension methods to register application services and repositories
+/// into the dependency injection container.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)

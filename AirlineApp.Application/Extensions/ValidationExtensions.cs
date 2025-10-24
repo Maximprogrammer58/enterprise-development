@@ -10,6 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AirlineApp.Application.Extensions;
 
+
+/// <summary>
+/// Provides extension methods to register FluentValidation validators
+/// for DTOs into the dependency injection container.
+/// </summary>
 public static class ValidationExtensions
 {
     public static IServiceCollection AddValidation(this IServiceCollection services)
