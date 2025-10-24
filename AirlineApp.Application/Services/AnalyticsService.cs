@@ -18,11 +18,7 @@ public class AnalyticsService(IFlightRepository flightRepository,
 
         return tickets
             .GroupBy(t => t.Flight)
-            .Select(g => new FlightWithPassengerCountDto
-            {
-                FlightCode = g.Key.Code,
-                PassengerCount = g.Count()
-            })
+            .Select(g => new FlightWithPassengerCountDto(g.Key.Code, g.Count()))
             .OrderByDescending(x => x.PassengerCount)
             .Take(5)
             .ToList();
@@ -40,11 +36,7 @@ public class AnalyticsService(IFlightRepository flightRepository,
 
         return tickets
             .Where(t => t.Flight.Code == flightCode && (t.BaggageWeight ?? 0) == 0)
-            .Select(t => new PassengerWithZeroBaggageDto
-            {
-                PassengerName = t.Passenger.FullName,
-                FlightCode = t.Flight.Code
-            })
+            .Select(t => new PassengerWithZeroBaggageDto(t.Passenger.FullName, t.Flight.Code))
             .OrderBy(p => p.PassengerName)
             .ToList();
     }
@@ -70,13 +62,12 @@ public class AnalyticsService(IFlightRepository flightRepository,
             .Where(t => flights.Contains(t.Flight))
             .ToList();
 
-        return new ModelSummaryDto
-        {
-            ModelName = modelName,
-            TotalFlights = flights.Count,
-            TotalPassengers = tickets.Count,
-            TotalBaggage = tickets.Sum(t => t.BaggageWeight ?? 0)
-        };
+        return new ModelSummaryDto(
+            modelName,
+            flights.Count,
+            tickets.Count,
+            tickets.Sum(t => t.BaggageWeight ?? 0)
+        );
     }
 
     /// <summary>

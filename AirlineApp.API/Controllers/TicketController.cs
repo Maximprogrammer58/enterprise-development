@@ -1,5 +1,4 @@
-﻿using AirlineApp.Application.Services;
-using AirlineApp.Contracts.Dtos.TicketDtos;
+﻿using AirlineApp.Contracts.Dtos.TicketDtos;
 using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +17,8 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// </summary>
     /// <returns>A list of <see cref="TicketGetDto"/> objects.</returns>
     [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<IEnumerable<TicketGetDto>>> GetAll()
         => Ok(await service.GetAllAsync());
 
@@ -27,6 +28,9 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="id">The Id of the ticket to retrieve.</param>
     /// <returns>A <see cref="TicketGetDto"/> if found; otherwise, 404 NotFound.</returns>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<TicketGetDto>> GetById(int id)
     {
         var result = await service.GetByIdAsync(id);
@@ -39,6 +43,8 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="dto">The data for the new ticket.</param>
     /// <returns>The created ticket with its Id.</returns>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] TicketEditDto dto)
     {
         var result = await service.CreateAsync(dto);
@@ -52,6 +58,9 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="dto">The updated ticket data.</param>
     /// <returns>NoContent if updated; 404 NotFound or 400 BadRequest if invalid.</returns>
     [HttpPut("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] TicketEditDto dto)
     {
         await service.UpdateAsync(id, dto);
@@ -64,6 +73,9 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="id">The Id of the ticket to delete.</param>
     /// <returns>NoContent if deleted; 404 NotFound if ticket not found.</returns>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {
         await service.DeleteAsync(id);

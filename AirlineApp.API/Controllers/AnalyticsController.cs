@@ -16,6 +16,8 @@ public class AnalyticsController(AnalyticsService analyticsService) : Controller
     /// </summary>
     /// <returns>A list of <see cref="FlightWithPassengerCountDto"/> representing flights and their passenger counts.</returns>
     [HttpGet("top-flights")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<List<FlightWithPassengerCountDto>>> GetTopFlights()
         => Ok(await analyticsService.GetTopFlightsByPassengerCountAsync());
 
@@ -25,6 +27,9 @@ public class AnalyticsController(AnalyticsService analyticsService) : Controller
     /// <param name="flightCode">The code of the flight.</param>
     /// <returns>A list of <see cref="PassengerWithZeroBaggageDto"/>.</returns>
     [HttpGet("passengers-zero-baggage")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<List<PassengerWithZeroBaggageDto>>> GetPassengersZeroBaggage([FromQuery] string flightCode)
         => Ok(await analyticsService.GetPassengersWithZeroBaggageAsync(flightCode));
 
@@ -36,6 +41,9 @@ public class AnalyticsController(AnalyticsService analyticsService) : Controller
     /// <param name="end">End date of the period.</param>
     /// <returns>A <see cref="ModelSummaryDto"/> containing flight count, passenger count, and total baggage.</returns>
     [HttpGet("model-summary")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<ModelSummaryDto>> GetModelSummary([FromQuery] string modelName, [FromQuery] DateTime start, [FromQuery] DateTime end)
         => Ok(await analyticsService.GetSummaryByModelInPeriodAsync(modelName, start, end));
 
@@ -46,6 +54,9 @@ public class AnalyticsController(AnalyticsService analyticsService) : Controller
     /// <param name="arrival">Arrival location.</param>
     /// <returns>A list of flight codes.</returns>
     [HttpGet("flights-from-to")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<List<string>>> GetFlightsFromTo([FromQuery] string departure, [FromQuery] string arrival)
         => Ok(await analyticsService.GetFlightsFromToAsync(departure, arrival));
 
@@ -54,6 +65,8 @@ public class AnalyticsController(AnalyticsService analyticsService) : Controller
     /// </summary>
     /// <returns>A list of flight codes with the shortest duration.</returns>
     [HttpGet("flights-min-duration")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<List<string>>> GetFlightsWithMinimalDuration()
         => Ok(await analyticsService.GetFlightsWithMinimalDurationAsync());
 }

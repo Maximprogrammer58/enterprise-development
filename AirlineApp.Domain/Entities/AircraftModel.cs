@@ -35,5 +35,8 @@ public class AircraftModel
     /// </summary>
     public required float CargoCapacity { get; set; }
 
+    /// <summary>
+    /// Collection of aircraft models that belong to this family.
+    /// </summary>
     public ICollection<Flight> Flights { get; set; } = new List<Flight>();
 }

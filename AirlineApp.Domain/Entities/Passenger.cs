@@ -25,5 +25,8 @@ public class Passenger
     /// </summary>
     public DateOnly? BirthDate { get; set; }
 
+    /// <summary>
+    /// Collection of tickets associated with this passneger.
+    /// </summary>
     public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

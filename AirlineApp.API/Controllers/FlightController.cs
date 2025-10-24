@@ -1,5 +1,4 @@
-﻿using AirlineApp.Application.Services;
-using AirlineApp.Contracts.Dtos.FlightDtos;
+﻿using AirlineApp.Contracts.Dtos.FlightDtos;
 using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +17,8 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// </summary>
     /// <returns>A list of <see cref="FlightGetDto"/> objects.</returns>
     [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<IEnumerable<FlightGetDto>>> GetAll()
         => Ok(await service.GetAllAsync());
 
@@ -27,6 +28,9 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// <param name="id">The Id of the flight to retrieve.</param>
     /// <returns>A <see cref="FlightGetDto"/> if found; otherwise, 404 NotFound.</returns>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult<FlightGetDto>> GetById(int id)
     {
         var result = await service.GetByIdAsync(id);
@@ -39,6 +43,8 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// <param name="dto">The data for the new flight.</param>
     /// <returns>The created flight with its Id.</returns>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] FlightEditDto dto)
     {
         var result = await service.CreateAsync(dto);
@@ -52,6 +58,9 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// <param name="dto">The updated flight data.</param>
     /// <returns>NoContent if updated; 400 BadRequest if invalid; 404 NotFound if flight not found.</returns>
     [HttpPut("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] FlightEditDto dto)
     {
         await service.UpdateAsync(id, dto);
@@ -64,6 +73,9 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// <param name="id">The Id of the flight to delete.</param>
     /// <returns>NoContent if deleted; 404 NotFound if flight not found.</returns>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {
         await service.DeleteAsync(id);

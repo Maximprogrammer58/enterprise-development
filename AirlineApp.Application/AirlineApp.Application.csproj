@@ -9,12 +9,14 @@
   <ItemGroup>
     <ProjectReference Include="..\AirlineApp.Contracts\AirlineApp.Contracts.csproj" />
     <ProjectReference Include="..\AirlineApp.Domain\AirlineApp.Domain.csproj" />
+    <ProjectReference Include="..\AirlineApp.Infrastructure\AirlineApp.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
   </ItemGroup>
 
 </Project>

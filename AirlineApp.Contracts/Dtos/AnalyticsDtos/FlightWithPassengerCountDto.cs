@@ -6,9 +6,15 @@
 public class FlightWithPassengerCountDto
 {
     /// <summary>Flight code.</summary>
-    public required string FlightCode { get; set; }
+    public string FlightCode { get; set; }
 
     /// <summary>Number of passengers on the flight.</summary>
-    public required int PassengerCount { get; set; }
+    public int PassengerCount { get; set; }
+
+    public FlightWithPassengerCountDto(string flightCode, int passengerCount)
+    {
+        FlightCode = flightCode;
+        PassengerCount = passengerCount;
+    }
 }
 

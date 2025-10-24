@@ -6,8 +6,14 @@
 public class PassengerWithZeroBaggageDto
 {
     /// <summary>Passenger full name.</summary>
-    public required string PassengerName { get; set; }
+    public string PassengerName { get; set; }
 
     /// <summary>Flight code the passenger is on.</summary>
-    public required string FlightCode { get; set; }
+    public string FlightCode { get; set; }
+
+    public PassengerWithZeroBaggageDto(string passengerName, string flightCode)
+    {
+        PassengerName = passengerName;
+        FlightCode = flightCode;
+    }
 }
