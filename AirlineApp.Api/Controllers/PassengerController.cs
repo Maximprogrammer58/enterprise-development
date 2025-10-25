@@ -41,9 +41,11 @@ public class PassengerController(ICrudService<PassengerGetDto, PassengerEditDto>
     /// Creates a new passenger.
     /// </summary>
     /// <param name="dto">The data for the new passenger.</param>
-    /// <returns>The created passenger with its Id.</returns>
+    /// <returns>The created passenger with its Id.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] PassengerEditDto dto)
     {
@@ -58,7 +60,8 @@ public class PassengerController(ICrudService<PassengerGetDto, PassengerEditDto>
     /// <param name="dto">The updated passenger data.</param>
     /// <returns>NoContent if updated; 404 NotFound if passenger not found.</returns>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] PassengerEditDto dto)
@@ -71,10 +74,12 @@ public class PassengerController(ICrudService<PassengerGetDto, PassengerEditDto>
     /// Deletes a passenger by Id.
     /// </summary>
     /// <param name="id">The Id of the passenger to delete.</param>
-    /// <returns>NoContent if deleted; 404 NotFound if passenger not found.</returns>
+    /// <returns>NoContent if deleted; 404 NotFound if passenger not found.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {

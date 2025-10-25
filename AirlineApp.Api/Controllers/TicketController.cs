@@ -41,9 +41,11 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// Creates a new ticket.
     /// </summary>
     /// <param name="dto">The data for the new ticket.</param>
-    /// <returns>The created ticket with its Id.</returns>
+    /// <returns>The created ticket with its Id.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] TicketEditDto dto)
     {
@@ -58,7 +60,8 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="dto">The updated ticket data.</param>
     /// <returns>NoContent if updated; 404 NotFound or 400 BadRequest if invalid.</returns>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(200)]
+    [[ProducesResponseType(204)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] TicketEditDto dto)
@@ -71,10 +74,12 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// Deletes a ticket by Id.
     /// </summary>
     /// <param name="id">The Id of the ticket to delete.</param>
-    /// <returns>NoContent if deleted; 404 NotFound if ticket not found.</returns>
+    /// <returns>NoContent if deleted; 404 NotFound if ticket not found.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {

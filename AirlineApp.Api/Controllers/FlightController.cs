@@ -41,9 +41,11 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// Creates a new flight.
     /// </summary>
     /// <param name="dto">The data for the new flight.</param>
-    /// <returns>The created flight with its Id.</returns>
+    /// <returns>The created flight with its Id.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] FlightEditDto dto)
     {
@@ -58,7 +60,8 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// <param name="dto">The updated flight data.</param>
     /// <returns>NoContent if updated; 400 BadRequest if invalid; 404 NotFound if flight not found.</returns>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] FlightEditDto dto)
@@ -71,10 +74,12 @@ public class FlightController(ICrudService<FlightGetDto, FlightEditDto> service)
     /// Deletes a flight by its Id.
     /// </summary>
     /// <param name="id">The Id of the flight to delete.</param>
-    /// <returns>NoContent if deleted; 404 NotFound if flight not found.</returns>
+    /// <returns>NoContent if deleted; 404 NotFound if flight not found.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {

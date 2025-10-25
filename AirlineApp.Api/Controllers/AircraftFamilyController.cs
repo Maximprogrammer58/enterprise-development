@@ -41,9 +41,11 @@ public class AircraftFamilyController(ICrudService<AircraftFamilyGetDto, Aircraf
     /// Creates a new aircraft family.
     /// </summary>
     /// <param name="dto">The data for the new aircraft family.</param>
-    /// <returns>The created aircraft family with its Id.</returns>
+    /// <returns>The created aircraft family with its Id.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Create([FromBody] AircraftFamilyEditDto dto)
     {
@@ -56,9 +58,11 @@ public class AircraftFamilyController(ICrudService<AircraftFamilyGetDto, Aircraf
     /// </summary>
     /// <param name="id">The Id of the aircraft family to update.</param>
     /// <param name="dto">The updated aircraft family data.</param>
-    /// <returns>NoContent if updated; 404 NotFound if not found.</returns>
+    /// <returns>NoContent if updated; 404 NotFound if not found.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] AircraftFamilyEditDto dto)
@@ -74,8 +78,9 @@ public class AircraftFamilyController(ICrudService<AircraftFamilyGetDto, Aircraf
     /// <returns>NoContent if deleted; 404 NotFound if not found; 
     /// 400 BadRequest if deletion is not allowed due to existing linked data.</returns>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {

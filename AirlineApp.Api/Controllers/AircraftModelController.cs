@@ -41,9 +41,11 @@ public class AircraftModelController(ICrudService<AircraftModelGetDto, AircraftM
     /// Creates a new aircraft model.
     /// </summary>
     /// <param name="dto">The data for the new aircraft model.</param>
-    /// <returns>The created aircraft model with its Id.</returns>
+    /// <returns>The created aircraft model with its Id.
+    /// 400 Bad Request — if the provided data is invalid.</returns>
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(500)]
     public async Task<ActionResult<AircraftModelGetDto>> Create([FromBody] AircraftModelEditDto dto)
     {
@@ -58,7 +60,8 @@ public class AircraftModelController(ICrudService<AircraftModelGetDto, AircraftM
     /// <param name="dto">The updated aircraft model data.</param>
     /// <returns>NoContent if updated; 400 BadRequest if invalid; 404 NotFound if not found.</returns>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Update(int id, [FromBody] AircraftModelEditDto dto)
@@ -74,8 +77,9 @@ public class AircraftModelController(ICrudService<AircraftModelGetDto, AircraftM
     /// <returns>NoContent if deleted; 404 NotFound if not found; 
     /// 400 BadRequest if deletion is not allowed due to existing linked flights.</returns>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(200)]
     [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<ActionResult> Delete(int id)
     {
