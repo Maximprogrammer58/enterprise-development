@@ -60,7 +60,7 @@ public class TicketController(ICrudService<TicketGetDto, TicketEditDto> service)
     /// <param name="dto">The updated ticket data.</param>
     /// <returns>NoContent if updated; 404 NotFound or 400 BadRequest if invalid.</returns>
     [HttpPut("{id:int}")]
-    [[ProducesResponseType(204)]
+    [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
