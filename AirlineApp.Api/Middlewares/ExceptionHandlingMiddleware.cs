@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace AirlineApp.API.Middlewares;
+namespace AirlineApp.Api.Middlewares;
 
 /// <summary>
 /// Middleware for centralized exception handling.

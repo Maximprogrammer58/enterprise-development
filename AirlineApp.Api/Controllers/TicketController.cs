@@ -2,7 +2,7 @@
 using AirlineApp.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AirlineApp.API.Controllers;
+namespace AirlineApp.Api.Controllers;
 
 /// <summary>
 /// Controller for managing Tickets.

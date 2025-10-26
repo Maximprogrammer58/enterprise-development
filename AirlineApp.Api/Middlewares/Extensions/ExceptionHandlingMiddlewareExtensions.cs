@@ -1,4 +1,4 @@
-﻿using AirlineApp.API.Middlewares;
+﻿using AirlineApp.Api.Middlewares;
 
 namespace AirlineApp.Api.Middlewares.Extensions;
 
