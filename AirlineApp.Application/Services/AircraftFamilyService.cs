@@ -51,7 +51,7 @@ public class AircraftFamilyService(IAircraftFamilyRepository repository,
         var family = await repository.GetByIdWithModelsAsync(id)
                  ?? throw new InvalidOperationException($"Aircraft family with Id {id} not found");
 
-        if (family.Models.Any())
+        if (family.Models.Count != 0)
             throw new InvalidOperationException("Cannot delete AircraftFamily: there are existing AircraftModels linked to it.");
 
         await repository.DeleteAsync(family.Id);

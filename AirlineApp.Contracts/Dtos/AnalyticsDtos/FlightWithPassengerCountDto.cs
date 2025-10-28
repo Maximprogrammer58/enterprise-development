@@ -3,18 +3,12 @@
 // <summary>
 /// DTO representing a flight with its passenger count.
 /// </summary>
-public class FlightWithPassengerCountDto
+public class FlightWithPassengerCountDto(string flightCode, int passengerCount)
 {
     /// <summary>Flight code.</summary>
-    public string FlightCode { get; set; }
+    public string FlightCode { get; set; } = flightCode;
 
     /// <summary>Number of passengers on the flight.</summary>
-    public int PassengerCount { get; set; }
-
-    public FlightWithPassengerCountDto(string flightCode, int passengerCount)
-    {
-        FlightCode = flightCode;
-        PassengerCount = passengerCount;
-    }
+    public int PassengerCount { get; set; } = passengerCount;
 }
 

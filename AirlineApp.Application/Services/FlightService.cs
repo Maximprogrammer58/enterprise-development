@@ -78,7 +78,7 @@ public class FlightService(IFlightRepository flightRepository,
         var flight = await flightRepository.GetByIdWithTicketsAsync(id)
                      ?? throw new InvalidOperationException($"Flight with Id {id} not found");
 
-        if (flight.Tickets.Any())
+        if (flight.Tickets.Count != 0)
             throw new InvalidOperationException("Cannot delete flight with existing tickets.");
 
         await flightRepository.DeleteAsync(id);

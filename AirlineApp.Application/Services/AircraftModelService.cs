@@ -72,7 +72,7 @@ public class AircraftModelService(IAircraftModelRepository modelRepository,
         var model = await modelRepository.GetByIdWithFlightsAsync(id)
                     ?? throw new InvalidOperationException($"AircraftModel with Id {id} not found");
 
-        if (model.Flights.Any())
+        if (model.Flights.Count != 0)
             throw new InvalidOperationException("Cannot delete AircraftModel: there are existing Flights linked to it.");
 
         await modelRepository.DeleteAsync(id);

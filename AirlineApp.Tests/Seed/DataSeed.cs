@@ -22,8 +22,8 @@ public class DataSeed
         Tickets = InitTickets(Flights, Passengers);
     }
 
-    private static List<AircraftFamily> InitAircraftFamilies() => new()
-    {
+    private static List<AircraftFamily> InitAircraftFamilies() =>
+    [
         new AircraftFamily { Name = "A320 Family", Manufacturer = "Airbus" },
         new AircraftFamily { Name = "737 Family", Manufacturer = "Boeing" },
         new AircraftFamily { Name = "777 Family", Manufacturer = "Boeing" },
@@ -34,10 +34,10 @@ public class DataSeed
         new AircraftFamily { Name = "E-Jet Series", Manufacturer = "Embraer" },
         new AircraftFamily { Name = "MC-21 Family", Manufacturer = "Irkut" },
         new AircraftFamily { Name = "SSJ100 Family", Manufacturer = "Sukhoi" }
-    };
+    ];
 
-    private static List<AircraftModel> InitAircraftModels(List<AircraftFamily> families) => new()
-    {
+    private static List<AircraftModel> InitAircraftModels(List<AircraftFamily> families) =>
+    [
         new AircraftModel { Name = "A320", Family = families[0], FlightRange = 6000f, PassengerCapacity = 180f, CargoCapacity = 20000f },
         new AircraftModel { Name = "737-800", Family = families[1], FlightRange = 5500f, PassengerCapacity = 160f, CargoCapacity = 18000f },
         new AircraftModel { Name = "777-300ER", Family = families[2], FlightRange = 11000f, PassengerCapacity = 370f, CargoCapacity = 45000f },
@@ -48,10 +48,10 @@ public class DataSeed
         new AircraftModel { Name = "E195", Family = families[7], FlightRange = 4200f, PassengerCapacity = 120f, CargoCapacity = 12000f },
         new AircraftModel { Name = "MC-21-300", Family = families[8], FlightRange = 6000f, PassengerCapacity = 210f, CargoCapacity = 22000f },
         new AircraftModel { Name = "SSJ100", Family = families[9], FlightRange = 4500f, PassengerCapacity = 100f, CargoCapacity = 10000f }
-    };
+    ];
 
-    private static List<Passenger> InitPassengers() => new()
-    {
+    private static List<Passenger> InitPassengers() =>
+    [
         new Passenger { PassportNumber = "P001", FullName = "Alex A", BirthDate = new DateOnly(1990,1,1) },
         new Passenger { PassportNumber = "P002", FullName = "Boris B", BirthDate = new DateOnly(1985,5,5) },
         new Passenger { PassportNumber = "P003", FullName = "Cid C", BirthDate = new DateOnly(1992,3,3) },
@@ -62,10 +62,10 @@ public class DataSeed
         new Passenger { PassportNumber = "P008", FullName = "Sergey S", BirthDate = new DateOnly(1987,8,8) },
         new Passenger { PassportNumber = "P009", FullName = "Olga O", BirthDate = new DateOnly(1996,9,9) },
         new Passenger { PassportNumber = "P010", FullName = "Maria M", BirthDate = new DateOnly(1994,10,10) }
-    };
+    ];
 
-    private static List<Flight> InitFlights(List<AircraftModel> models) => new()
-    {
+    private static List<Flight> InitFlights(List<AircraftModel> models) =>
+    [
         new Flight { Code = "FL001", Departure = "Moscow", Arrival = "Berlin", DepartureDateTime = new DateTime(2025,9,1,9,0,0), ArrivalDateTime = new DateTime(2025,9,1,11,0,0), Duration = TimeSpan.FromHours(2), AircraftModel = models[0] },
         new Flight { Code = "FL002", Departure = "Moscow", Arrival = "Paris", DepartureDateTime = new DateTime(2025,9,1,10,0,0), ArrivalDateTime = new DateTime(2025,9,1,13,30,0), Duration = TimeSpan.FromHours(3.5), AircraftModel = models[1] },
         new Flight { Code = "FL003", Departure = "Berlin", Arrival = "Paris", DepartureDateTime = new DateTime(2025,9,1,12,0,0), ArrivalDateTime = new DateTime(2025,9,1,13,30,0), Duration = TimeSpan.FromHours(1.5), AircraftModel = models[2] },
@@ -76,10 +76,10 @@ public class DataSeed
         new Flight { Code = "FL008", Departure = "New York", Arrival = "London", DepartureDateTime = new DateTime(2025,9,1,18,0,0), ArrivalDateTime = new DateTime(2025,9,2,0,0,0), Duration = TimeSpan.FromHours(6), AircraftModel = models[7] },
         new Flight { Code = "FL009", Departure = "Toronto", Arrival = "Montreal", DepartureDateTime = new DateTime(2025,9,1,19,0,0), ArrivalDateTime = new DateTime(2025,9,1,20,0,0), Duration = TimeSpan.FromHours(1), AircraftModel = models[8] },
         new Flight { Code = "FL010", Departure = "Shanghai", Arrival = "Beijing", DepartureDateTime = new DateTime(2025,9,1,7,0,0), ArrivalDateTime = new DateTime(2025,9,1,9,0,0), Duration = TimeSpan.FromHours(2), AircraftModel = models[0] }
-    };
+    ];
 
-    private static List<Ticket> InitTickets(List<Flight> flights, List<Passenger> passengers) => new()
-    {
+    private static List<Ticket> InitTickets(List<Flight> flights, List<Passenger> passengers) =>
+    [
         new Ticket { Flight = flights[0], Passenger = passengers[0], SeatNumber = "1A", HasHandLuggage = true, BaggageWeight = 20 },
         new Ticket { Flight = flights[0], Passenger = passengers[1], SeatNumber = "1B", HasHandLuggage = false },
         new Ticket { Flight = flights[0], Passenger = passengers[2], SeatNumber = "1C", HasHandLuggage = true, BaggageWeight = 5 },
@@ -105,7 +105,7 @@ public class DataSeed
         new Ticket { Flight = flights[7], Passenger = passengers[7], SeatNumber = "9A", HasHandLuggage = true, BaggageWeight = 7 },
         new Ticket { Flight = flights[8], Passenger = passengers[8], SeatNumber = "10A", HasHandLuggage = true, BaggageWeight = 6 },
         new Ticket { Flight = flights[9], Passenger = passengers[9], SeatNumber = "11A", HasHandLuggage = true, BaggageWeight = 5 }
-    };
+    ];
 }
 
 

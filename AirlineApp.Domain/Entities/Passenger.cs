@@ -28,5 +28,5 @@ public class Passenger
     /// <summary>
     /// Collection of tickets associated with this passneger.
     /// </summary>
-    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public ICollection<Ticket> Tickets { get; set; } = [];
 }

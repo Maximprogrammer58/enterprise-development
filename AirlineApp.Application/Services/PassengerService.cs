@@ -52,7 +52,7 @@ public class PassengerService(IPassengerRepository repository,
         var passenger = await repository.GetByIdWithTicketsAsync(id)
                         ?? throw new InvalidOperationException($"Passenger with Id {id} not found");
 
-        if (passenger.Tickets.Any())
+        if (passenger.Tickets.Count != 0)
             throw new InvalidOperationException("Cannot delete passenger with existing tickets.");
 
         await repository.DeleteAsync(id);

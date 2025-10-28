@@ -3,17 +3,11 @@
 /// <summary>
 /// DTO representing a passenger with zero baggage on a flight.
 /// </summary>
-public class PassengerWithZeroBaggageDto
+public class PassengerWithZeroBaggageDto(string passengerName, string flightCode)
 {
     /// <summary>Passenger full name.</summary>
-    public string PassengerName { get; set; }
+    public string PassengerName { get; set; } = passengerName;
 
     /// <summary>Flight code the passenger is on.</summary>
-    public string FlightCode { get; set; }
-
-    public PassengerWithZeroBaggageDto(string passengerName, string flightCode)
-    {
-        PassengerName = passengerName;
-        FlightCode = flightCode;
-    }
+    public string FlightCode { get; set; } = flightCode;
 }

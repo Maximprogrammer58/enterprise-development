@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace AirlineApp.Infrastructure.Migrations
+namespace AirlineApp.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class AddNavigationProperties : Migration
 {
     /// <inheritdoc />
-    public partial class AddNavigationProperties : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }

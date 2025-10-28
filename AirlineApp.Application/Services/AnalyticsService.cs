@@ -16,12 +16,11 @@ public class AnalyticsService(IFlightRepository flightRepository,
     {
         var tickets = await ticketRepository.GetAllAsync();
 
-        return tickets
+        return [.. tickets
             .GroupBy(t => t.Flight)
             .Select(g => new FlightWithPassengerCountDto(g.Key.Code, g.Count()))
             .OrderByDescending(x => x.PassengerCount)
-            .Take(5)
-            .ToList();
+            .Take(5)];
     }
 
     /// <summary>
@@ -34,11 +33,10 @@ public class AnalyticsService(IFlightRepository flightRepository,
 
         var tickets = await ticketRepository.GetAllAsync();
 
-        return tickets
+        return [.. tickets
             .Where(t => t.Flight.Code == flightCode && (t.BaggageWeight ?? 0) == 0)
             .Select(t => new PassengerWithZeroBaggageDto(t.Passenger.FullName, t.Flight.Code))
-            .OrderBy(p => p.PassengerName)
-            .ToList();
+            .OrderBy(p => p.PassengerName)];
     }
 
     /// <summary>
@@ -85,11 +83,10 @@ public class AnalyticsService(IFlightRepository flightRepository,
             throw new ArgumentException("Departure and arrival locations cannot be the same");
 
         var flights = await flightRepository.GetAllAsync();
-        return flights
+        return [.. flights
             .Where(f => f.Departure == departure && f.Arrival == arrival)
             .OrderBy(f => f.Code)
-            .Select(f => f.Code)
-            .ToList();
+            .Select(f => f.Code)];
     }
 
     /// <summary>
@@ -103,10 +100,9 @@ public class AnalyticsService(IFlightRepository flightRepository,
             .Where(f => f.Duration.HasValue)
             .Min(f => f.Duration!.Value);
 
-        return flights
+        return [.. flights
             .Where(f => f.Duration.HasValue && f.Duration.Value == minDuration)
             .OrderBy(f => f.Code)
-            .Select(f => f.Code)
-            .ToList();
+            .Select(f => f.Code)];
     }
 }

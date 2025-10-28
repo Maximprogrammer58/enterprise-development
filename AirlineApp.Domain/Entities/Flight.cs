@@ -48,5 +48,5 @@ public class Flight
     /// <summary>
     /// Collection of tickets associated with this flight.
     /// </summary>
-    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public ICollection<Ticket> Tickets { get; set; } = [];
 }

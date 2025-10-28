@@ -20,5 +20,5 @@ public class AircraftFamily
     /// </summary>
     public required string Manufacturer { get; set; }
 
-    public ICollection<AircraftModel> Models { get; set; } = new List<AircraftModel>();
+    public ICollection<AircraftModel> Models { get; set; } = [];
 }
