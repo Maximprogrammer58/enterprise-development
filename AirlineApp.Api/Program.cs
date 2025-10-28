@@ -3,7 +3,6 @@ using AirlineApp.Application.Extensions;
 using AirlineApp.Application.Mappers;
 using AirlineApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +22,11 @@ builder.Services.AddValidation();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
-    options.IncludeXmlComments(xmlPath);
+    var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+    foreach (var xmlFile in xmlFiles)
+    {
+        options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
+    }
 });
 
 var app = builder.Build();
