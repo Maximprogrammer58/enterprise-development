@@ -1,6 +1,6 @@
 ﻿namespace AirlineApp.Contracts.Dtos.AnalyticsDtos;
 
-// <summary>
+/// <summary>
 /// DTO representing a flight with its passenger count.
 /// </summary>
 public class FlightWithPassengerCountDto(string flightCode, int passengerCount)

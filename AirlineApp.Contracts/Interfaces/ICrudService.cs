@@ -1,5 +1,8 @@
 ﻿namespace AirlineApp.Contracts.Interfaces;
 
+/// <summary>
+/// Basic asynchronous CRUD service interface for working with DTO entities.
+/// </summary>
 public interface ICrudService<TEntityDto, TEditDto>
 {
     public Task<IEnumerable<TEntityDto>> GetAllAsync();
