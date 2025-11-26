@@ -3,6 +3,7 @@ using AirlineApp.Contracts.Interfaces;
 using AirlineApp.Domain.Entities;
 using AirlineApp.Domain.Interfaces;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace AirlineApp.Application.Services;
 
@@ -12,7 +13,8 @@ namespace AirlineApp.Application.Services;
 public class TicketService(ITicketRepository ticketRepository,
         IFlightRepository flightRepository,
         IPassengerRepository passengerRepository,
-        IMapper mapper) : ITicketService
+        IMapper mapper,
+        ILogger<TicketService> logger) : ITicketService
 {
     /// <summary>Gets all tickets.</summary>
     public async Task<IEnumerable<TicketGetDto>> GetAllAsync()
@@ -88,26 +90,52 @@ public class TicketService(ITicketRepository ticketRepository,
     /// Processes a batch of ticket contracts received from message queue.
     /// Creates tickets in bulk after validating flight and passenger references.
     /// </summary>
+    /// <param name="contracts">List of ticket contracts to process</param>
     public async Task ReceiveContractList(IList<TicketEditDto> contracts)
     {
+        var processedCount = 0;
+        var errorCount = 0;
+
         foreach (var dto in contracts)
         {
-            var flight = await flightRepository.GetByIdAsync(dto.FlightId)
-                      ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
-
-            var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
-                            ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
-
-            var ticket = new Ticket
+            try
             {
-                Flight = flight,
-                Passenger = passenger,
-                SeatNumber = dto.SeatNumber,
-                HasHandLuggage = dto.HasHandLuggage,
-                BaggageWeight = dto.BaggageWeight
-            };
+                var flight = await flightRepository.GetByIdAsync(dto.FlightId)
+                    ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
 
-            await ticketRepository.AddAsync(ticket);
+                var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
+                    ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
+
+                if (await ticketRepository.ExistsByFlightAndSeatAsync(dto.FlightId, dto.SeatNumber))
+                    throw new InvalidOperationException($"Seat {dto.SeatNumber} is already occupied in flight {dto.FlightId}");
+
+                if (await ticketRepository.ExistsByFlightAndPassengerAsync(dto.FlightId, dto.PassengerId))
+                    throw new InvalidOperationException($"Passenger {dto.PassengerId} already has a ticket for flight {dto.FlightId}");
+
+                var ticket = new Ticket
+                {
+                    Flight = flight,
+                    Passenger = passenger,
+                    SeatNumber = dto.SeatNumber,
+                    HasHandLuggage = dto.HasHandLuggage,
+                    BaggageWeight = dto.BaggageWeight
+                };
+
+                await ticketRepository.AddAsync(ticket);
+                processedCount++;
+
+                logger.LogInformation("Successfully processed ticket for flight {FlightId}, passenger {PassengerId}, seat {SeatNumber}",
+                    dto.FlightId, dto.PassengerId, dto.SeatNumber);
+            }
+            catch (Exception ex)
+            {
+                errorCount++;
+                logger.LogWarning(ex, "Failed to process contract for flight {FlightId}, passenger {PassengerId}",
+                    dto.FlightId, dto.PassengerId);
+            }
         }
+
+        logger.LogInformation("Ticket processing completed: {ProcessedCount} successful, {ErrorCount} failed out of {TotalCount}",
+            processedCount, errorCount, contracts.Count);
     }
 }

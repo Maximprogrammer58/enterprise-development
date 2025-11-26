@@ -62,4 +62,18 @@ public class TicketRepository(AppDbContext context) : ITicketRepository
         context.Tickets.Remove(entity);
         await context.SaveChangesAsync();
     }
+
+    /// <summary>
+    /// Checks if a seat is already occupied in a specific flight.
+    /// </summary>
+    public async Task<bool> ExistsByFlightAndSeatAsync(int flightId, string seatNumber) =>
+        await context.Tickets
+            .AnyAsync(t => t.Flight.Id == flightId && t.SeatNumber == seatNumber);
+
+    /// <summary>
+    /// Checks if a passenger already has a ticket for a specific flight.
+    /// </summary>
+    public async Task<bool> ExistsByFlightAndPassengerAsync(int flightId, int passengerId) =>
+        await context.Tickets
+            .AnyAsync(t => t.Flight.Id == flightId && t.Passenger.Id == passengerId);
 }
