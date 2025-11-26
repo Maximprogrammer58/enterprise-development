@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.4.1" />
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AirlineApp.Application\AirlineApp.Application.csproj" />
+    <ProjectReference Include="..\AirlineApp.Infrastructure.RabbitMq\AirlineApp.Infrastructure.RabbitMq.csproj" />
     <ProjectReference Include="..\AirlineApp.Infrastructure\AirlineApp.Infrastructure.csproj" />
   </ItemGroup>
 

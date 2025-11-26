@@ -31,6 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICrudService<PassengerGetDto, PassengerEditDto>, PassengerService>();
         services.AddScoped<ICrudService<TicketGetDto, TicketEditDto>, TicketService>();
 
+        services.AddScoped<ITicketService, TicketService>();
+
         services.AddScoped<AnalyticsService>();
 
         return services;

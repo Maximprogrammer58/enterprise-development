@@ -1,3 +1,4 @@
+using AirlineApp.Api;
 using AirlineApp.Api.Middlewares.Extensions;
 using AirlineApp.Application.Extensions;
 using AirlineApp.Application.Mappers;
@@ -28,6 +29,8 @@ builder.Services.AddSwaggerGen(options =>
         options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
     }
 });
+
+builder.AddGeneratorService(builder.Configuration);
 
 var app = builder.Build();
 

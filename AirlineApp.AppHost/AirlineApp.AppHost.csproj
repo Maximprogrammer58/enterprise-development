@@ -1,25 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.1" />
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.5.1" />
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <UserSecretsId>c3fa2fae-2912-46d8-b51b-95b6e468b323</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>c3fa2fae-2912-46d8-b51b-95b6e468b323</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="9.5.1" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.1" />
-    <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.5.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting" Version="9.5.1" />
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.1" />
+		<PackageReference Include="Aspire.Hosting.SqlServer" Version="9.5.1" />
+		<PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.5.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AirlineApp.Api\AirlineApp.Api.csproj" />
-    <ProjectReference Include="..\AirlineApp.Application\AirlineApp.Application.csproj" IsAspireProjectResource="false" />
-    <ProjectReference Include="..\AirlineApp.ServiceDefaults\AirlineApp.ServiceDefaults.csproj" IsAspireProjectResource="false" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AirlineApp.Api\AirlineApp.Api.csproj" />
+		<ProjectReference Include="..\AirlineApp.Application\AirlineApp.Application.csproj" IsAspireProjectResource="false" />
+		<ProjectReference Include="..\AirlineApp.Generator.RabbitMq.Host\AirlineApp.Generator.RabbitMq.Host.csproj" />
+		<ProjectReference Include="..\AirlineApp.Generator\AirlineApp.Generator.csproj" />
+		<ProjectReference Include="..\AirlineApp.ServiceDefaults\AirlineApp.ServiceDefaults.csproj" IsAspireProjectResource="false" />
+	</ItemGroup>
 
 </Project>

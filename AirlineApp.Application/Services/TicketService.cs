@@ -12,7 +12,7 @@ namespace AirlineApp.Application.Services;
 public class TicketService(ITicketRepository ticketRepository,
         IFlightRepository flightRepository,
         IPassengerRepository passengerRepository,
-        IMapper mapper) : ICrudService<TicketGetDto, TicketEditDto>
+        IMapper mapper) : ITicketService
 {
     /// <summary>Gets all tickets.</summary>
     public async Task<IEnumerable<TicketGetDto>> GetAllAsync()
@@ -82,5 +82,32 @@ public class TicketService(ITicketRepository ticketRepository,
             throw new InvalidOperationException($"Ticket with Id {id} not found");
 
         await ticketRepository.DeleteAsync(id);
+    }
+
+    /// <summary>
+    /// Processes a batch of ticket contracts received from message queue.
+    /// Creates tickets in bulk after validating flight and passenger references.
+    /// </summary>
+    public async Task ReceiveContractList(IList<TicketEditDto> contracts)
+    {
+        foreach (var dto in contracts)
+        {
+            var flight = await flightRepository.GetByIdAsync(dto.FlightId)
+                      ?? throw new KeyNotFoundException($"Flight with Id {dto.FlightId} not found");
+
+            var passenger = await passengerRepository.GetByIdAsync(dto.PassengerId)
+                            ?? throw new KeyNotFoundException($"Passenger with Id {dto.PassengerId} not found");
+
+            var ticket = new Ticket
+            {
+                Flight = flight,
+                Passenger = passenger,
+                SeatNumber = dto.SeatNumber,
+                HasHandLuggage = dto.HasHandLuggage,
+                BaggageWeight = dto.BaggageWeight
+            };
+
+            await ticketRepository.AddAsync(ticket);
+        }
     }
 }

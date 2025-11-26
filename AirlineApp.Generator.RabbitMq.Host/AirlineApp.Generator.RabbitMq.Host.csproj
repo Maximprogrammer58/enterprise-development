@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AirlineApp.Contracts\AirlineApp.Contracts.csproj" />
+    <ProjectReference Include="..\AirlineApp.Generator\AirlineApp.Generator.csproj" />
+    <ProjectReference Include="..\AirlineApp.ServiceDefaults\AirlineApp.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
