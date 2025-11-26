@@ -3,7 +3,6 @@ using AirlineApp.Generator.Generator;
 using AirlineApp.Generator.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Runtime.InteropServices;
 
 namespace AirlineApp.Generator.Controllers;
 

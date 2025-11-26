@@ -13,11 +13,11 @@ var waitTime = builder.AddParameter("GeneratorWaitTime");
 
 var rabbitUserName = builder.AddParameter("RabbitMQLogin");
 var rabbitPassword = builder.AddParameter("RabbitMQPassword");
-var rabbitMq = builder.AddRabbitMQ("bookstore-rabbitmq", userName: rabbitUserName, password: rabbitPassword)
+var rabbitMq = builder.AddRabbitMQ("airlineapp-rabbitmq", userName: rabbitUserName, password: rabbitPassword)
     .WithManagementPlugin();
 
 var rabbiMqQueue = builder.AddParameter("RabbitMQQueue");
-builder.AddProject<Projects.AirlineApp_Generator_RabbitMq_Host>("bookstore-generator-rabbitmq-host")
+builder.AddProject<Projects.AirlineApp_Generator_RabbitMq_Host>("airlineapp-generator-rabbitmq-host")
     .WithReference(rabbitMq)
     .WaitFor(rabbitMq)
     .WithEnvironment("Generator:BatchSize", batchSize)

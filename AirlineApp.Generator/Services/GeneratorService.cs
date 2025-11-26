@@ -1,5 +1,4 @@
-﻿using AirlineApp.Generator.Services;
-using AirlineApp.Generator.Generator;
+﻿using AirlineApp.Generator.Generator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,7 +31,6 @@ public class GeneratorService(IConfiguration configuration, IServiceScopeFactory
         var producer = scope.ServiceProvider.GetRequiredService<IProducerService>();
         while (counter < payloadLimit)
         {
-
             await producer.SendAsync(TicketGenerator.GenerateTickets(batchSize));
             await Task.Delay(waitTime * 1000, stoppingToken);
             counter += batchSize;

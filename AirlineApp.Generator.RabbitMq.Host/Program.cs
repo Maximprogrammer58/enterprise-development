@@ -5,14 +5,14 @@ using AirlineApp.ServiceDefaults;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddRabbitMQClient("bookstore-rabbitmq");
+builder.AddRabbitMQClient("airlineapp-rabbitmq");
 builder.Services.AddScoped<IProducerService, TicketRabbitMqProducer>();
 builder.Services.AddHostedService<GeneratorService>();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
     var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-    .Where(a => a.GetName().Name!.StartsWith("BookStore"))
+    .Where(a => a.GetName().Name!.StartsWith("AirlineApp"))
     .Distinct();
 
     foreach (var assembly in assemblies)

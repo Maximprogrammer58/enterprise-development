@@ -21,7 +21,7 @@
 		<ProjectReference Include="..\AirlineApp.Api\AirlineApp.Api.csproj" />
 		<ProjectReference Include="..\AirlineApp.Application\AirlineApp.Application.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\AirlineApp.Generator.RabbitMq.Host\AirlineApp.Generator.RabbitMq.Host.csproj" />
-		<ProjectReference Include="..\AirlineApp.Generator\AirlineApp.Generator.csproj" />
+		<ProjectReference Include="..\AirlineApp.Generator\AirlineApp.Generator.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\AirlineApp.ServiceDefaults\AirlineApp.ServiceDefaults.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>
 

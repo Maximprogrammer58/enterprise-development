@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using System.Runtime.CompilerServices;
+
 namespace AirlineApp.Generator.Generator;
 
 /// <summary>
@@ -12,7 +12,8 @@ public static class TicketGeneratorExtensions
     /// </summary>
     /// <typeparam name="T">Parameter for the type of generated data</typeparam>
     /// <param name="faker">Data generator</param>
-    public static Faker<T> WithRecord<T>(this Faker<T> faker) where T : class =>
-        faker.CustomInstantiator(_ => RuntimeHelpers.GetUninitializedObject(typeof(T)) as T);
-
+    public static Faker<T> WithRecord<T>(this Faker<T> faker) where T : class
+    {
+        return faker.CustomInstantiator(_ => Activator.CreateInstance<T>());
+    }
 }

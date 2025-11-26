@@ -1,6 +1,7 @@
 ﻿using AirlineApp.Infrastructure.RabbitMq;
 
 namespace AirlineApp.Api;
+
 /// <summary>
 /// Extension class for registering a suitable client for the generation service in the DI container
 /// </summary>
@@ -16,7 +17,8 @@ internal static class WebApplicationBuilderExtensions
     /// <exception cref="FormatException">If the Generator configuration parameter is unknown</exception>
     public static WebApplicationBuilder AddGeneratorService(this WebApplicationBuilder builder, IConfiguration configuration)
     {
-        if (!configuration.GetSection("Generator").Exists()) throw new ArgumentNullException("Generator", "Generator section is missing");
+        if (!configuration.GetSection("Generator").Exists())
+            throw new ArgumentNullException(nameof(configuration), "Generator section is missing"); 
 
         _ = configuration["Generator"] switch
         {
@@ -34,7 +36,7 @@ internal static class WebApplicationBuilderExtensions
     private static WebApplicationBuilder AddRabbitMq(this WebApplicationBuilder builder)
     {
         builder.Services.AddHostedService<AirlineAppRabbitMqConsumer>();
-        builder.AddRabbitMQClient("bookstore-rabbitmq");
+        builder.AddRabbitMQClient("airlineapp-rabbitmq");
         return builder;
     }
 }
