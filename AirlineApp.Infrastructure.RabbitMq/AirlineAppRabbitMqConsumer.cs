@@ -22,7 +22,6 @@ public class AirlineAppRabbitMqConsumer(
 {
     private readonly IConnection _connection = connection;
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
-    private readonly IConfiguration _configuration = configuration;
     private readonly ILogger<AirlineAppRabbitMqConsumer> _logger = logger;
     private readonly string _queueName = configuration.GetSection("RabbitMq")["QueueName"]
             ?? throw new KeyNotFoundException("QueueName section of RabbitMq is missing");
