@@ -1,6 +1,5 @@
 ﻿using AirlineApp.Generator.Generator;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,33 +8,130 @@ namespace AirlineApp.Generator.Services;
 /// <summary>
 /// Service for generating and sending a specified number of contracts at specified intervals
 /// </summary>
-/// <param name="configuration">Configuration</param>
-/// <param name="scopeFactory">Context Factory</param>
+/// <remarks>
+/// Initializes a new instance of the <see cref="GeneratorService"/> class.
+/// </remarks>
+/// <param name="configuration">Application configuration</param>
+/// <param name="producerService">Producer service for sending messages</param>
 /// <param name="logger">Logger</param>
-public class GeneratorService(IConfiguration configuration, IServiceScopeFactory scopeFactory, ILogger<GeneratorService> logger) : BackgroundService
+public class GeneratorService(
+    IConfiguration configuration,
+    IProducerService producerService,
+    ILogger<GeneratorService> logger) : BackgroundService, IDisposable
 {
-    private readonly string _batchSize = configuration.GetSection("Generator")["BatchSize"] ?? throw new KeyNotFoundException("BatchSize section of Generator is missing");
-    private readonly string _payloadLimit = configuration.GetSection("Generator")["PayloadLimit"] ?? throw new KeyNotFoundException("PayloadLimit section of Generator is missing");
-    private readonly string _waitTime = configuration.GetSection("Generator")["WaitTime"] ?? throw new KeyNotFoundException("WaitTime section of Generator is missing");
+    private readonly ILogger<GeneratorService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private bool _disposed;
 
+    private IConfiguration Configuration { get; } = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    private IProducerService ProducerService { get; } = producerService ?? throw new ArgumentNullException(nameof(producerService));
+
+    /// <summary>
+    /// Executes the background service to generate and send messages.
+    /// </summary>
+    /// <param name="stoppingToken">Cancellation token to stop the service gracefully.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Starting to send {total} messages with {time}s interval with {batch} messages in batch", _payloadLimit, _waitTime, _batchSize);
+        await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
 
-        if (!int.TryParse(_batchSize, out var batchSize)) throw new FormatException("Unable to parse BatchSize");
-        if (!int.TryParse(_payloadLimit, out var payloadLimit)) throw new FormatException("Unable to parse PayloadLimit");
-        if (!int.TryParse(_waitTime, out var waitTime)) throw new FormatException("Unable to parse WaitTime");
-
-        var counter = 0;
-        using var scope = scopeFactory.CreateScope();
-        var producer = scope.ServiceProvider.GetRequiredService<IProducerService>();
-        while (counter < payloadLimit)
+        try
         {
-            await producer.SendAsync(TicketGenerator.GenerateTickets(batchSize));
-            await Task.Delay(waitTime * 1000, stoppingToken);
-            counter += batchSize;
+            var batchSize = GetConfigurationValue("Generator:BatchSize", "BatchSize");
+            var payloadLimit = GetConfigurationValue("Generator:PayloadLimit", "PayloadLimit");
+            var waitTime = GetConfigurationValue("Generator:WaitTime", "WaitTime");
+
+            _logger.LogInformation(
+                "Starting to send {Total} messages with {Time}s interval with {Batch} messages in batch",
+                payloadLimit, waitTime, batchSize);
+
+            var counter = 0;
+            while (counter < payloadLimit && !stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await ProducerService.SendAsync(TicketGenerator.GenerateTickets(batchSize));
+                    counter += batchSize;
+
+                    _logger.LogDebug("Sent {Counter} of {Total} messages", counter, payloadLimit);
+
+                    if (counter < payloadLimit)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(waitTime), stoppingToken);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    _logger.LogInformation("Generator service was cancelled");
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while sending batch");
+                    await Task.Delay(TimeSpan.FromSeconds(Math.Min(waitTime * 2, 60)), stoppingToken);
+                }
+            }
+
+            _logger.LogInformation(
+                "Finished sending {Total} messages with {Time}s interval with {Batch} messages in batch",
+                payloadLimit, waitTime, batchSize);
         }
-        logger.LogInformation("Finished sending {total} messages with {time}s interval with {batch} messages in batch", _payloadLimit, _waitTime, _batchSize);
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogCritical(ex, "Generator service failed to start");
+            throw;
+        }
     }
 
+    /// <summary>
+    /// Gets and parses configuration value.
+    /// </summary>
+    /// <param name="sectionPath">Path to configuration section</param>
+    /// <param name="parameterName">Parameter name for error messages</param>
+    /// <returns>Parsed integer value</returns>
+    /// <exception cref="KeyNotFoundException">If configuration value is missing</exception>
+    /// <exception cref="FormatException">If configuration value cannot be parsed</exception>
+    private int GetConfigurationValue(string sectionPath, string parameterName)
+    {
+        var valueStr = Configuration[sectionPath]
+            ?? throw new KeyNotFoundException($"{parameterName} section is missing");
+
+        if (!int.TryParse(valueStr, out var value))
+            throw new FormatException($"Unable to parse {parameterName}");
+
+        if (value <= 0)
+            throw new ArgumentOutOfRangeException(parameterName, $"{parameterName} must be greater than 0");
+
+        return value;
+    }
+
+    /// <summary>
+    /// Releases the unmanaged resources used by the <see cref="GeneratorService"/> and optionally releases the managed resources.
+    /// </summary>
+    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                if (ProducerService is IDisposable disposableProducer)
+                {
+                    disposableProducer.Dispose();
+                    _logger.LogDebug("ProducerService disposed");
+                }
+            }
+
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Releases all resources used by the <see cref="GeneratorService"/>.
+    /// </summary>
+    public new void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+        base.Dispose();
+    }
 }

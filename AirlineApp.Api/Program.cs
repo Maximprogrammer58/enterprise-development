@@ -30,7 +30,7 @@ builder.Services.AddSwaggerGen(options =>
     }
 });
 
-builder.AddGeneratorService(builder.Configuration);
+builder.AddRabbitMqConsumer(builder.Configuration);
 
 var app = builder.Build();
 

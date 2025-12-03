@@ -6,8 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.AddRabbitMQClient("airlineapp-rabbitmq");
-builder.Services.AddScoped<IProducerService, TicketRabbitMqProducer>();
-builder.Services.AddHostedService<GeneratorService>();
+
+builder.Services.AddSingleton<IProducerService, TicketRabbitMqProducer>();
+
+builder.Services.AddSingleton<GeneratorService>();
+builder.Services.AddSingleton<IHostedService>(provider =>
+    provider.GetRequiredService<GeneratorService>());
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {

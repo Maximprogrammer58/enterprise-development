@@ -14,17 +14,45 @@ namespace AirlineApp.Infrastructure.RabbitMq;
 /// Background service for consuming ticket messages from RabbitMQ queue.
 /// Listens to the specified queue, processes incoming messages, and saves ticket data to the database.
 /// </summary>
-public class AirlineAppRabbitMqConsumer(
-    IConnection connection,
-    IServiceScopeFactory scopeFactory,
-    IConfiguration configuration,
-    ILogger<AirlineAppRabbitMqConsumer> logger) : BackgroundService
+public class AirlineAppRabbitMqConsumer : BackgroundService, IDisposable
 {
-    private readonly IConnection _connection = connection;
-    private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
-    private readonly ILogger<AirlineAppRabbitMqConsumer> _logger = logger;
-    private readonly string _queueName = configuration.GetSection("RabbitMq")["QueueName"]
+    private readonly IConnection _connection;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<AirlineAppRabbitMqConsumer> _logger;
+    private readonly string _queueName;
+    private readonly IModel _channel; 
+    private bool _disposed;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AirlineAppRabbitMqConsumer"/> class.
+    /// </summary>
+    /// <param name="connection">RabbitMQ connection</param>
+    /// <param name="scopeFactory">Service scope factory for creating scopes per message</param>
+    /// <param name="configuration">Application configuration</param>
+    /// <param name="logger">Logger</param>
+    public AirlineAppRabbitMqConsumer(
+        IConnection connection,
+        IServiceScopeFactory scopeFactory,
+        IConfiguration configuration,
+        ILogger<AirlineAppRabbitMqConsumer> logger)
+    {
+        _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+        _queueName = configuration.GetSection("RabbitMq")["QueueName"]
             ?? throw new KeyNotFoundException("QueueName section of RabbitMq is missing");
+
+        _channel = _connection.CreateModel();
+        _channel.QueueDeclare(
+            queue: _queueName,
+            durable: false,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null);
+
+        _logger.LogInformation("RabbitMQ Consumer initialized for queue: {QueueName}", _queueName);
+    }
 
     /// <summary>
     /// Executes the background service to start consuming messages from RabbitMQ queue.
@@ -34,16 +62,14 @@ public class AirlineAppRabbitMqConsumer(
     /// <returns>A task that represents the asynchronous operation.</returns>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Establishing channel to queue {queue}", _queueName);
+        _logger.LogInformation("Starting to listen to queue {Queue}", _queueName);
 
-        stoppingToken.ThrowIfCancellationRequested();
-        var channel = _connection.CreateModel();
-        channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-        _logger.LogInformation("Began listening to queue {queue}", _queueName);
-        var consumer = new EventingBasicConsumer(channel);
+        var consumer = new EventingBasicConsumer(_channel);
         consumer.Received += async (_, ea) => await ReceiveMessage(ea, stoppingToken);
-        channel.BasicConsume(_queueName, true, consumer);
+
+        _channel.BasicConsume(_queueName, autoAck: true, consumer: consumer);
+
+        _logger.LogInformation("Successfully started listening to queue {Queue}", _queueName);
 
         return Task.CompletedTask;
     }
@@ -56,20 +82,55 @@ public class AirlineAppRabbitMqConsumer(
     /// <returns>A task that represents the asynchronous message processing operation.</returns>
     private async Task ReceiveMessage(BasicDeliverEventArgs args, CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Received a message from queue {queue}", _queueName);
         try
         {
+            _logger.LogDebug("Received a message from queue {Queue}", _queueName);
+
             stoppingToken.ThrowIfCancellationRequested();
-            var contracts = JsonSerializer.Deserialize<List<TicketEditDto>>(new MemoryStream(args.Body.ToArray()))
+
+            var contracts = JsonSerializer.Deserialize<List<TicketEditDto>>(args.Body.Span)
                 ?? throw new FormatException("Unable to parse contracts from message body");
 
             using var scope = _scopeFactory.CreateScope();
             var ticketService = scope.ServiceProvider.GetRequiredService<ITicketService>();
+
             await ticketService.ReceiveContractList(contracts);
+
+            _logger.LogDebug("Successfully processed batch of {Count} contracts", contracts.Count);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Message processing was cancelled");
+            throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred during receiving contracts from {queue}", _queueName);
+            _logger.LogError(ex, "Exception occurred during processing contracts from {Queue}", _queueName);
         }
+    }
+
+    /// <summary>
+    /// Disposes the resources used by the consumer.
+    /// </summary>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _channel?.Close();
+                _channel?.Dispose();
+            }
+            _disposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Disposes the consumer.
+    /// </summary>
+    public override void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }
