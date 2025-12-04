@@ -14,13 +14,13 @@ namespace AirlineApp.Infrastructure.RabbitMq;
 /// Background service for consuming ticket messages from RabbitMQ queue.
 /// Listens to the specified queue, processes incoming messages, and saves ticket data to the database.
 /// </summary>
-public class AirlineAppRabbitMqConsumer : BackgroundService, IDisposable
+public class AirlineAppRabbitMqConsumer : BackgroundService
 {
     private readonly IConnection _connection;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<AirlineAppRabbitMqConsumer> _logger;
     private readonly string _queueName;
-    private readonly IModel _channel; 
+    private readonly IModel _channel;
     private bool _disposed;
 
     /// <summary>
@@ -36,9 +36,14 @@ public class AirlineAppRabbitMqConsumer : BackgroundService, IDisposable
         IConfiguration configuration,
         ILogger<AirlineAppRabbitMqConsumer> logger)
     {
-        _connection = connection ?? throw new ArgumentNullException(nameof(connection));
-        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(connection, nameof(connection));
+        ArgumentNullException.ThrowIfNull(scopeFactory, nameof(scopeFactory));
+        ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
+        _connection = connection;
+        _scopeFactory = scopeFactory;
+        _logger = logger;
 
         _queueName = configuration.GetSection("RabbitMq")["QueueName"]
             ?? throw new KeyNotFoundException("QueueName section of RabbitMq is missing");
@@ -120,6 +125,8 @@ public class AirlineAppRabbitMqConsumer : BackgroundService, IDisposable
             {
                 _channel?.Close();
                 _channel?.Dispose();
+                _connection?.Close();
+                _connection?.Dispose();
             }
             _disposed = true;
         }
@@ -130,7 +137,8 @@ public class AirlineAppRabbitMqConsumer : BackgroundService, IDisposable
     /// </summary>
     public override void Dispose()
     {
-        Dispose(true);
+        base.Dispose();          
+        Dispose(true);           
         GC.SuppressFinalize(this);
     }
 }
